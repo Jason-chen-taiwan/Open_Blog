@@ -79,9 +79,8 @@ if __name__ == '__main__':
     print(f"Admin Email: {admin_email}")
     print("Configuration saved to docker-compose.yml and create_admin_user.py")
     print("\nYou can now run:")
-    print("1. docker-compose up -d")
-    print("2. docker-compose exec web flask db upgrade")
-    print("3. docker-compose exec web python create_admin_user.py")
+    print("1. docker compose up -d")
+    print("2. docker compose exec web flask db upgrade")
 
 if __name__ == "__main__":
     setup_credentials()

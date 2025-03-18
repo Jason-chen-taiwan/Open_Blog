@@ -29,6 +29,8 @@ A Flask-based blog system focused on cybersecurity, AI, and blockchain technolog
 
 1. System dependencies
 
+docker install(ubuntu):https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository
+
 ```bash
 # Debian/Ubuntu
 sudo apt-get update
@@ -116,17 +118,17 @@ CMD ["flask", "run", "--host=0.0.0.0"]
 
 ```bash
 # Build and start containers
-docker-compose up -d
+docker compose up -d
 
 # Initialize database
-docker-compose exec web flask db upgrade
-docker-compose exec web python create_admin_user.py
+docker compose exec web flask db upgrade
+docker compose exec web python create_admin_user.py
 
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop services
-docker-compose down
+docker compose down
 ```
 
 ### Production Deployment (Linux)
@@ -295,17 +297,24 @@ gunicorn --bind 0.0.0.0:5000 --workers 3 blog:app
 
 ## Quick Start
 
-1. Clone the repository:
+1. System requirements:
 
 ```bash
-git clone https://github.com/Jason-chen-taiwan/blog.git
-cd blog
+# Install Docker and Docker Compose
+sudo apt-get update
+sudo apt-get install -y docker.io docker-compose
 ```
 
-2. Update credentials in docker-compose.yml:
+2. Clone and setup:
 
-- Change MYSQL_PASSWORD
-- Set a secure SECRET_KEY
+```bash
+# Clone repository
+git clone https://github.com/Jason-chen-taiwan/blog.git
+cd blog
+
+# Setup credentials (MySQL password, admin account, etc.)
+python setup_credentials.py
+```
 
 3. Start the application:
 
@@ -313,7 +322,7 @@ cd blog
 # Build and start containers
 docker-compose up -d
 
-# Wait for MySQL to be ready
+# Wait for MySQL to be ready (check logs)
 docker-compose logs mysql
 
 # Initialize database and create admin
@@ -324,7 +333,7 @@ docker-compose exec web python create_admin_user.py
 4. Access the application:
 
 - Visit http://localhost:5000
-- Login with the admin credentials
+- Login with the admin credentials you set during setup
 
 ### Security Settings
 
