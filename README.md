@@ -1,6 +1,6 @@
-# JasonCrypto's Blog
+# Open Blog
 
-A Flask-based blog system focused on cybersecurity, AI, and blockchain technology.
+A one-click deployable blog system built with Flask. Create your personal blog in minutes.
 
 ## Features
 
@@ -23,94 +23,87 @@ A Flask-based blog system focused on cybersecurity, AI, and blockchain technolog
 - **Forms**: Flask-WTF
 - **Rate Limiting**: Flask-Limiter
 
-## 🚀 Quick Start Guide
+## Quick Start
 
-1. 克隆專案並進入目錄：
+1. Clone and setup:
 
 ```bash
-git clone https://github.com/Jason-chen-taiwan/blog.git
-cd blog
+git clone https://github.com/your-username/open-blog.git
+cd open-blog
 ```
 
-2. 設置環境變數：
+2. Start with Docker (Recommended):
 
 ```bash
-# 複製環境變數範本
+# Copy environment template
 cp .env.example .env
 
-# 編輯環境變數 (可選，使用預設值也可以)
-nano .env
-```
-
-3. 啟動服務：
-
-```bash
-# 使用 Docker Compose 啟動所有服務 (MySQL + Web 應用)
+# Launch all services
 docker compose up -d
 
-# 等待服務就緒（觀察日誌）
+# Wait for services to be ready
 docker compose logs -f
 ```
 
-4. 檢查管理員帳號：
+3. Get admin credentials:
 
 ```bash
-# 查看管理員帳號資訊
+# Check admin account information
 docker compose logs web | grep "Admin Account"
 ```
 
-5. 訪問應用：
+4. Access your blog:
 
-- 網址：http://localhost:5000
-- 預設管理員郵箱：admin@example.com
-- 密碼：從上一步的日誌中獲取
+- URL: http://localhost:5000
+- Default admin email: admin@example.com
+- Password: Get from the logs above
 
-### 🔧 常用維護指令
+### Maintenance Commands
 
 ```bash
-# 查看服務狀態
+# Check service status
 docker compose ps
 
-# 重新啟動服務
+# Restart services
 docker compose restart
 
-# 停止服務
+# Stop services
 docker compose down
 
-# 查看日誌
-docker compose logs blog-web    # 查看網站日誌
-docker compose logs blog-mysql  # 查看資料庫日誌
+# View logs
+docker compose logs web    # Web application logs
+docker compose logs mysql  # Database logs
 
-# 備份數據庫
-docker compose exec blog-mysql mysqldump -u blog_user -p blog_db > backup.sql
+# Database backup
+docker compose exec mysql mysqldump -u blog_user -p blog_db > backup.sql
 
-# 進入數據庫命令行
-docker compose exec blog-mysql mysql -u blog_user -p blog_db
+# Access database CLI
+docker compose exec mysql mysql -u blog_user -p blog_db
 ```
 
-### 🆘 故障排除
+### Troubleshooting
 
-1. 如果網站無法訪問：
+1. If the website is inaccessible:
 
 ```bash
-# 檢查容器狀態
+# Check container status
 docker compose ps
 
-# 檢查網站日誌
-docker compose logs blog-web
+# Check application logs
+docker compose logs web
 ```
 
-2. 如果數據庫連接失敗：
+2. If database connection fails:
 
 ```bash
-# 檢查數據庫狀態
-docker compose logs blog-mysql
+# Check database logs
+docker compose logs mysql
 
-# 重啟數據庫
-docker compose restart blog-mysql
+# Restart database
+docker compose restart mysql
 ```
 
-## Installation (not docker)
+## Manual Installation
 
 ### Linux Environment
 
@@ -132,8 +125,8 @@ sudo dnf install -y python3-devel mysql-devel gcc
 
 ```bash
 # Clone repository
-git clone https://github.com/Jason-chen-taiwan/blog.git
-cd blog
+git clone https://github.com/your-username/open-blog.git
+cd open-blog
 
 # Create and activate virtual environment
 python3 -m venv venv
@@ -313,8 +306,8 @@ gunicorn --bind 0.0.0.0:5000 --workers 3 blog:app
 
 ```bash
 # Clone repository
-git clone https://github.com/Jason-chen-taiwan/blog.git
-cd blog
+git clone https://github.com/your-username/open-blog.git
+cd open-blog
 ```
 
 2. Configure credentials:
@@ -473,8 +466,8 @@ server {
 
 ```bash
 # Clone and setup
-git clone https://github.com/Jason-chen-taiwan/blog.git
-cd blog
+git clone https://github.com/your-username/open-blog.git
+cd open-blog
 
 # Configure environment
 cp .env.example .env
