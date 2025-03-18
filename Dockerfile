@@ -10,7 +10,8 @@ RUN apt-get update && \
     build-essential \
     pkg-config \
     dos2unix \
-    && rm -rf /var/lib/apt/lists/*
+    curl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
 COPY requirements.txt .

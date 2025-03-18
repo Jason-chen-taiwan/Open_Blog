@@ -1,4 +1,6 @@
 from flask import Flask
+import logging  # 新增這行
+import sys
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -13,6 +15,14 @@ limiter = None
 
 def create_app():
     app = Flask(__name__)
+    
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        stream=sys.stderr
+    )
+    app.logger.setLevel(logging.INFO)
     
     # Configure app
     import os
