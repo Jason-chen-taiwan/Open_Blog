@@ -5,11 +5,11 @@ def create_admin():
     app = create_app()
     with app.app_context():
         # Check if admin already exists
-        admin = User.query.filter_by(email='your_mail').first()
+        admin = User.query.filter_by(email='your_email').first()
         if not admin:
             # Create new admin user
-            admin = User(email='your_mail', is_admin=True)  
-            admin.set_password('your_password')
+            admin = User(email='your_email', is_admin=True)  
+            admin.set_password('yourpassword')
             db.session.add(admin)
             db.session.commit()
             print("Admin user created successfully!")

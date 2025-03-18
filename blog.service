@@ -1,0 +1,23 @@
+# 這個檔案只在不使用 Docker 而直接在 Linux 系統上部署時才需要
+[Unit]
+Description=Blog Gunicorn Daemon
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/blog
+Environment="PATH=/var/www/blog/venv/bin"
+Environment="FLASK_APP=blog.app"
+Environment="FLASK_ENV=production"
+
+ExecStart=/var/www/blog/venv/bin/gunicorn \
+    --workers 3 \
+    --bind unix:blog.sock \
+    --access-logfile /var/log/blog/access.log \
+    --error-logfile /var/log/blog/error.log \
+    --umask 007 \
+    blog:app
+
+[Install]
+WantedBy=multi-user.target

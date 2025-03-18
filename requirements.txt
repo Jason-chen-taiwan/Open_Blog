@@ -20,3 +20,9 @@ Pillow>=10.0.0
 
 # Environment Variables
 python-dotenv>=0.21.0
+
+# Production Server
+gunicorn>=20.1.0
+
+# Setup tools
+PyYAML>=6.0.1

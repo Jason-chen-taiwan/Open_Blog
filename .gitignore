@@ -64,11 +64,6 @@ coverage.xml
 # Migrations
 migrations/versions/
 
-# Environment variables
-.env
-.env.*
-!.env.example
-
 # Media and Static files
 blog/static/uploads/*
 !blog/static/uploads/.gitkeep
