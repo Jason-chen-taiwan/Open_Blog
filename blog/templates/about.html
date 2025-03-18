@@ -1,0 +1,333 @@
+{% extends "base.html" %} {% block content %}
+<div class="about-page">
+  <!-- Profile Section -->
+  <section class="profile-section text-center mb-5">
+    <div class="profile-header">
+      <img
+        src="{{ url_for('static', filename='img/profile.jpg') }}"
+        alt="Profile Picture"
+        class="profile-image rounded-circle mb-3"
+        onerror="this.src='https://via.placeholder.com/150'"
+      />
+      <h1 class="display-4">YAN SIANG CHEN</h1>
+      <p class="lead">
+        Cybersecurity Researcher | AI Engineer | Blockchain Developer | Full
+        Stack Developer
+      </p>
+      <p class="tagline">
+        Exploring the intersection of security, artificial intelligence, and
+        blockchain technology
+      </p>
+    </div>
+  </section>
+
+  <!-- Introduction Section -->
+  <section class="intro-section mb-5">
+    <h2>Background</h2>
+    <p>
+      With over 3~4 years of experience in cybersecurity and AI development, I'm
+      passionate about creating secure, intelligent systems that can make a
+      positive impact. My research focuses on implementing AI-driven security
+      solutions and exploring blockchain applications for enhanced data
+      integrity.
+    </p>
+  </section>
+
+  <!-- Research Projects Section -->
+  <section class="research-projects mb-5">
+    <h2>Research Projects</h2>
+
+    <div class="project-item mb-4">
+      <h4>Cloud Security and Privacy Mechanisms Against Coexistence Attacks</h4>
+      <p class="text-muted">
+        Tunghai University, Graduate Research | 2020 – 2021
+      </p>
+      <ul>
+        <li>
+          Led the cybersecurity research segment, focusing on malware detection
+          and packet analysis
+        </li>
+        <li>
+          Achieved 98% accuracy in identifying threats through data processing
+          and machine learning
+        </li>
+      </ul>
+    </div>
+
+    <div class="project-item mb-4">
+      <h4>
+        Integration of Wearable IoT and AI Deep Learning for Dialysis Discomfort
+        Prediction
+      </h4>
+      <p class="text-muted">
+        Tunghai University, Graduate Research | 2019 – 2021
+      </p>
+      <ul>
+        <li>
+          Developed an LSTM-based predictive model using patient dialysis
+          machine data
+        </li>
+        <li>
+          Achieved 89% accuracy in predicting discomfort levels, improving
+          patient monitoring
+        </li>
+      </ul>
+    </div>
+
+    <div class="project-item mb-4">
+      <h4>
+        Cross-Platform Multi-Modal Machine Learning for Suspicious Account
+        Detection
+      </h4>
+      <p class="text-muted">
+        Tunghai University, Graduate Research | 2020 – Present
+      </p>
+      <ul>
+        <li>
+          Built an unsupervised deep learning classifier using Twitter fake
+          account datasets
+        </li>
+        <li>
+          Aimed to detect suspicious accounts and prevent disinformation-based
+          manipulations
+        </li>
+      </ul>
+    </div>
+
+    <div class="project-item mb-4">
+      <h4>Adaptive and Multi-Modal Federated Learning System</h4>
+      <p class="text-muted">
+        Ministry of Science and Technology Funded Project | 2021 – Present
+      </p>
+      <ul>
+        <li>
+          Principal researcher of a two-year project approved by the Ministry of
+          Science and Technology
+        </li>
+        <li>
+          Led a team to accelerate development, achieving initial results in six
+          months instead of two years
+        </li>
+        <li>
+          Responsible for NLP, backend system development, server setup, and
+          system planning & integration
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Research & Publications -->
+  <section class="research-section mb-5">
+    <h2>Research & Publications</h2>
+    <div class="publications">
+      <ul class="list-unstyled">
+        <li class="publication-item">
+          <h5>
+            <a
+              href="https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=9634065"
+              target="_blank"
+            >
+              Steganography in RGB Images Using Adjacent Mean
+            </a>
+          </h5>
+          <p>Published in IEEE IIEEE Access, 2021</p>
+        </li>
+        <li class="publication-item">
+          <h5>
+            <a
+              href="https://ieeexplore.ieee.org/document/10332652"
+              target="_blank"
+            >
+              Analysis of Tweet Sentiment and Propagation Graph of Twitter Users
+            </a>
+          </h5>
+          <p>
+            Published in IEEE 6th International Conference on Knowledge
+            Innovation and Invention (ICKII), 2023
+          </p>
+        </li>
+        <li class="publication-item">
+          <h5>
+            Machine Learning and AI for Intrusion Detection: A Comprehensive
+            Approach
+          </h5>
+          <p>Published in International Journal of Cybersecurity, 2023</p>
+        </li>
+        <li class="publication-item">
+          <h5>Blockchain-based Security Framework</h5>
+          <p>Presented at IEEE Security Conference, 2022</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Professional Experience -->
+  <section class="experience-section mb-5">
+    <h2>Professional Experience</h2>
+
+    <div class="experience-item mb-4">
+      <h4>System Integration Engineer</h4>
+      <p class="text-muted">
+        Industrial Technology Research Institute (ITRI) | Mar 2023 – Nov 2024
+      </p>
+      <ul>
+        <li>
+          Led system architecture planning and security technology integration
+          for enterprise solutions
+        </li>
+        <li>
+          Specialized in Zero Trust architecture and blockchain security while
+          also researching GAI (Generative AI) models and Speech AI models
+        </li>
+        <li>
+          Provided cybersecurity consulting services, achieving key performance
+          indicators:
+        </li>
+        <ul>
+          <li>Delivered cybersecurity consulting services to 4 companies</li>
+          <li>Assisted 5 companies in integrating Zero Trust solutions</li>
+          <li>
+            Contributed to the development of post-quantum cryptography,
+            specifically the Dilithium algorithm
+          </li>
+          <li>
+            Led the development and implementation of FIDO and FDO algorithms
+          </li>
+        </ul>
+      </ul>
+
+      <div class="experience-item mb-4">
+        <h4>Director, Innovation Center</h4>
+        <p class="text-muted">
+          Wale Forensics Technology Co., Ltd. | Dec 2024 – Present
+        </p>
+        <ul>
+          <li>
+            Developing AI-powered forensic tools for digital investigations
+          </li>
+          <li>
+            Overseeing the cross-departmental workflow system for better
+            operational efficiency
+          </li>
+          <li>Development of an iOS-based evidence management application</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills & Tools -->
+  <section class="skills-section mb-5">
+    <h2>Technical Skills</h2>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <h4>Core Technologies</h4>
+        <ul class="list-unstyled">
+          <li><strong>Python</strong></li>
+          <li><strong>GCP</strong></li>
+          <li><strong>Git</strong></li>
+          <li><strong>Docker</strong></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>AI & Machine Learning</h4>
+        <ul class="list-unstyled">
+          <li>AI Model Development</li>
+          <li>Deep Learning</li>
+          <li>Data Science</li>
+          <li><strong>Keras</strong> | <strong>NumPy</strong></li>
+          <li><strong>Pandas</strong> | <strong>Scikit-Learn</strong></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>Web Development</h4>
+        <ul class="list-unstyled">
+          <li><strong>Django</strong></li>
+          <li><strong>Flask</strong></li>
+          <li><strong>API Development</strong></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>Blockchain & Security</h4>
+        <ul class="list-unstyled">
+          <li><strong>Cryptography</strong></li>
+          <li><strong>Web3.0</strong></li>
+          <li><strong>Solidity</strong></li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>Programming Languages</h4>
+        <ul class="list-unstyled">
+          <li><strong>Python</strong></li>
+          <li>Java</li>
+          <li>C#</li>
+        </ul>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>Operating Systems & Cloud</h4>
+        <ul class="list-unstyled">
+          <li><strong>Linux</strong></li>
+          <li><strong>GCP</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Current Projects -->
+  <section class="projects-section mb-5">
+    <h2>Current Projects</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">AI-Driven Security Framework</h5>
+            <p class="card-text">
+              Developing an intelligent system for real-time threat detection
+              and response.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Blockchain Security Protocols</h5>
+            <p class="card-text">
+              Researching novel approaches to secure smart contract
+              implementations.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section text-center">
+    <h2>Get in Touch</h2>
+    <p>Interested in collaborating or learning more about my work?</p>
+    <div class="social-links">
+      <a
+        href="https://github.com/Jason-chen-taiwan"
+        class="btn btn-outline-primary"
+      >
+        <i class="fab fa-github"></i> GitHub
+      </a>
+      <a href="https://x.com/zwasd5123jason" class="btn btn-outline-primary">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      <a
+        href="https://www.cake.me/me/zwasd5123"
+        class="btn btn-outline-primary"
+      >
+        <i class="fas fa-birthday-cake"></i> Cake
+      </a>
+      <a
+        href="https://www.instagram.com/zwasd5123/"
+        class="btn btn-outline-primary"
+      >
+        <i class="fab fa-instagram"></i> Instagram
+      </a>
+    </div>
+  </section>
+</div>
+{% endblock %}

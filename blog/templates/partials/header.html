@@ -1,0 +1,100 @@
+<header class="site-header">
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <!-- Logo -->
+      <a class="navbar-brand" href="{{ url_for('main.home') }}">
+        <img
+          src="{{ url_for('static', filename='img/logo.png') }}"
+          alt="Blog Logo"
+          class="logo"
+          onerror="this.src='{{ url_for('static', filename='img/default-logo.png') }}'"
+        />
+        JasonCrypto's Blog
+      </a>
+
+      <!-- Mobile toggle -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navigation items -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown"
+            >
+              Categories
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item category-filter"
+                  href="#"
+                  data-category=""
+                  >All Posts</a
+                >
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              {% for category in ['Cybersecurity', 'AI', 'Blockchain'] %}
+              <li>
+                <a
+                  class="dropdown-item category-filter"
+                  href="#"
+                  data-category="{{ category }}"
+                >
+                  {{ category }}
+                </a>
+              </li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('main.about') }}">About Me</a>
+          </li>
+          {% if current_user.is_authenticated and current_user.is_administrator
+          %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('main.create') }}">New Post</a>
+          </li>
+          {% endif %}
+        </ul>
+
+        <!-- Auth section -->
+        <div class="navbar-nav">
+          {% if current_user.is_authenticated %}
+          <span class="nav-item nav-link text-info">
+            <i class="fas fa-user me-1"></i>{{ current_user.email }}
+          </span>
+          <a class="nav-link" href="{{ url_for('main.logout') }}">
+            <i class="fas fa-sign-out-alt me-1"></i>Logout
+          </a>
+          {% else %}
+          <a class="nav-link" href="{{ url_for('main.login') }}">
+            <i class="fas fa-sign-in-alt me-1"></i>Login
+          </a>
+          <a class="nav-link" href="{{ url_for('main.register') }}">
+            <i class="fas fa-user-plus me-1"></i>Register
+          </a>
+          {% endif %}
+
+          <!-- Theme toggle -->
+          <button class="btn nav-link" id="theme-toggle">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
