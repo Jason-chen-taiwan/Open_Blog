@@ -2,6 +2,27 @@
 
 A Flask-based blog system focused on cybersecurity, AI, and blockchain technology.
 
+## Features
+
+- 🔐 User Authentication & Authorization
+- 📝 Rich Text Editor with Image Upload
+- 🏷️ Tag and Category System
+- 🌓 Light/Dark Theme Toggle
+- 📱 Responsive Design
+- 💾 MySQL Database Support
+- 🔒 CSRF Protection
+- 🚫 Rate Limiting
+- 🖼️ Image Upload & Management
+
+## Technology Stack
+
+- **Backend**: Flask
+- **Database**: MySQL
+- **Frontend**: Bootstrap 5, Quill.js
+- **Authentication**: Flask-Login
+- **Forms**: Flask-WTF
+- **Rate Limiting**: Flask-Limiter
+
 ## 🚀 Quick Start Guide
 
 1. 克隆專案並進入目錄：
@@ -57,14 +78,14 @@ docker compose restart
 docker compose down
 
 # 查看日誌
-docker compose logs web    # 查看網站日誌
-docker compose logs mysql  # 查看資料庫日誌
+docker compose logs blog-web    # 查看網站日誌
+docker compose logs blog-mysql  # 查看資料庫日誌
 
 # 備份數據庫
-docker compose exec mysql mysqldump -u blog_user -p blog_db > backup.sql
+docker compose exec blog-mysql mysqldump -u blog_user -p blog_db > backup.sql
 
 # 進入數據庫命令行
-docker compose exec mysql mysql -u blog_user -p blog_db
+docker compose exec blog-mysql mysql -u blog_user -p blog_db
 ```
 
 ### 🆘 故障排除
@@ -76,48 +97,20 @@ docker compose exec mysql mysql -u blog_user -p blog_db
 docker compose ps
 
 # 檢查網站日誌
-docker compose logs web
+docker compose logs blog-web
 ```
 
 2. 如果數據庫連接失敗：
 
 ```bash
 # 檢查數據庫狀態
-docker compose logs mysql
+docker compose logs blog-mysql
 
 # 重啟數據庫
-docker compose restart mysql
+docker compose restart blog-mysql
 ```
 
-3. 如果需要重設管理員密碼：
-
-```bash
-# 生成新的隨機密碼
-docker compose exec web flask init-admin
-```
-
-## Features
-
-- 🔐 User Authentication & Authorization
-- 📝 Rich Text Editor with Image Upload
-- 🏷️ Tag and Category System
-- 🌓 Light/Dark Theme Toggle
-- 📱 Responsive Design
-- 💾 MySQL Database Support
-- 🔒 CSRF Protection
-- 🚫 Rate Limiting
-- 🖼️ Image Upload & Management
-
-## Technology Stack
-
-- **Backend**: Flask
-- **Database**: MySQL
-- **Frontend**: Bootstrap 5, Quill.js
-- **Authentication**: Flask-Login
-- **Forms**: Flask-WTF
-- **Rate Limiting**: Flask-Limiter
-
-## Installation
+## Installation (not docker)
 
 ### Linux Environment
 
@@ -148,81 +141,6 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
-```
-
-### Docker Deployment (Linux)
-
-1. Create docker-compose.yml:
-
-```yaml
-version: "3.8"
-services:
-  mysql:
-    image: mysql:8.0
-    container_name: blog-mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: blog_db
-      MYSQL_USER: blog_user
-      MYSQL_PASSWORD: your_password
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: unless-stopped
-
-  web:
-    build: .
-    container_name: blog-web
-    environment:
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=blog_user
-      - MYSQL_PASSWORD=your_password
-      - MYSQL_DATABASE=blog_db
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./blog/static/uploads:/app/blog/static/uploads
-    depends_on:
-      - mysql
-    restart: unless-stopped
-
-volumes:
-  mysql_data:
-```
-
-2. Create Dockerfile:
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN apt-get update && \
-    apt-get install -y default-libmysqlclient-dev build-essential pkg-config && \
-    pip install -r requirements.txt && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-COPY . .
-CMD ["flask", "run", "--host=0.0.0.0"]
-```
-
-3. Deploy with Docker Compose:
-
-```bash
-# Build and start containers
-docker compose up -d
-
-# Initialize database
-docker compose exec web flask db upgrade
-docker compose exec web python create_admin_user.py
-
-# View logs
-docker compose logs -f
-
-# Stop services
-docker compose down
 ```
 
 ### Production Deployment (Linux)
