@@ -9,6 +9,7 @@ RUN apt-get update && \
     default-libmysqlclient-dev \
     build-essential \
     pkg-config \
+    dos2unix \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -30,12 +31,13 @@ EXPOSE 5000
 
 # Add wait-for-it script
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /usr/local/bin/wait-for-it
-RUN chmod +x /usr/local/bin/wait-for-it
 
-# New entrypoint script
-COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+# Convert line endings and set permissions
+RUN dos2unix /usr/local/bin/wait-for-it && \
+    dos2unix docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/wait-for-it && \
+    chmod +x docker-entrypoint.sh
 
 # Change the command to use wait script
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "3", "--access-logfile", "-", "--error-logfile", "-", "blog.app:app"]

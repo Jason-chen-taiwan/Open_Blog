@@ -187,15 +187,9 @@ def comment(post_id):
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Registration successful! Please log in.')
-        return redirect(url_for('main.login'))
-    return render_template('register.html', form=form)
+    # 禁用註冊功能
+    flash('Registration is disabled. Please contact administrator.', 'error')
+    return redirect(url_for('main.login'))
 
 @bp.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5/minute", error_message="Too many login attempts. Please try again later.")

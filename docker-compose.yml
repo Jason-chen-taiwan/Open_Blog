@@ -43,6 +43,15 @@ services:
       - MYSQL_PASSWORD=yourpassword
       - MYSQL_DATABASE=blog_db
       - SECRET_KEY=your-production-secret-key-here
+      - FLASK_APP=blog.app
+      - ADMIN_EMAIL=admin@example.com
+      # 可以通過環境變數設置密碼，如果沒有設置則自動生成
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     ports:
       - "5000:5000"
     volumes:

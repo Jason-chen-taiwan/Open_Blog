@@ -1,6 +1,7 @@
 from flask.cli import FlaskGroup
 from blog import create_app, db
 from blog.models import User, Post, Comment, Tag
+from create_admin_user import create_admin
 
 cli = FlaskGroup(create_app=create_app)
 
@@ -10,18 +11,10 @@ def init_db():
     db.create_all()
     print('Initialized the database.')
 
-@cli.command("create-admin")
-def create_admin():
-    """Create admin user"""
-    admin = User.query.filter_by(email='zwasd5123@gmail.com').first()
-    if not admin:
-        admin = User(email='zwasd5123@gmail.com', is_admin=True)
-        admin.set_password('jas0nA1b10g')
-        db.session.add(admin)
-        db.session.commit()
-        print("Admin user created successfully")
-    else:
-        print("Admin user already exists")
+@cli.command("init-admin")
+def init_admin():
+    """Initialize admin account with random password."""
+    create_admin()
 
 if __name__ == "__main__":
     cli()

@@ -62,7 +62,7 @@ def create_app():
     from .routes import bp
     app.register_blueprint(bp)
     
-    # Ensure database is created
+    # Initialize database
     with app.app_context():
         from . import models
         db.create_all()
