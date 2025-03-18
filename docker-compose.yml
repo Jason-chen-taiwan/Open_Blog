@@ -19,6 +19,20 @@ services:
       resources:
         limits:
           memory: 1G
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u$$MYSQL_USER",
+          "-p$$MYSQL_PASSWORD",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   web:
     build: .
@@ -35,7 +49,8 @@ services:
       - ./blog/static/uploads:/app/blog/static/uploads
       - ./blog/static/img:/app/blog/static/img
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     restart: unless-stopped
     deploy:
       resources:
