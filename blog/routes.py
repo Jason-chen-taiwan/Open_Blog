@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from flask import Blueprint, render_template, request, redirect, send_from_directory, url_for, flash, current_app, jsonify, g, g
+from flask import Blueprint, render_template, request, redirect, send_from_directory, url_for, flash, current_app, jsonify, g
 from flask_login import login_user, logout_user, login_required, current_user
 from . import db, limiter
-from .models import Post, Comment, User, Tag, Category
+from .models import Post, Comment, User, Tag, Category, Settings
 from .forms import RegistrationForm, LoginForm
 
 # 設定圖片上傳的資料夾與允許的檔案類型
@@ -18,6 +18,10 @@ def allowed_file(filename):
 
 # 建立 blueprint
 bp = Blueprint('main', __name__)
+
+@bp.before_request
+def load_settings():
+    g.ga_tracking_id = Settings.get_setting('ga_tracking_id')
 
 @bp.route('/')
 @bp.route('/category/<category_name>')
@@ -315,6 +319,63 @@ def manage_categories():
     
     categories = Category.query.order_by(Category.name).all()
     return render_template('manage_categories.html', categories=categories)
+
+@bp.route('/admin/settings', methods=['GET', 'POST'])
+@bp.route('/admin/settings/<type>', methods=['GET', 'POST'])
+@login_required
+def settings(type=None):
+    if not current_user.is_administrator:
+        flash('Only administrators can access settings')
+        return redirect(url_for('main.home'))
+    
+    if request.method == 'POST':
+        setting_type = request.form.get('setting_type')
+        
+        if setting_type == 'ga':
+            # Handle Google Analytics settings
+            ga_tracking_id = request.form.get('ga_tracking_id', '').strip()
+            Settings.set_setting('ga_tracking_id', ga_tracking_id)
+            flash('Google Analytics settings updated successfully')
+            
+        elif setting_type == 'category':
+            # Handle category management
+            action = request.form.get('action')
+            if action == 'add':
+                name = request.form.get('name')
+                if name:
+                    category = Category.query.filter_by(name=name).first()
+                    if category:
+                        flash('Category already exists')
+                    else:
+                        category = Category(name=name)
+                        db.session.add(category)
+                        db.session.commit()
+                        flash('Category added successfully')
+            elif action == 'delete':
+                category_id = request.form.get('category_id')
+                if category_id:
+                    category = Category.query.get_or_404(category_id)
+                    if category.posts:
+                        flash('Cannot delete category with existing posts')
+                    else:
+                        db.session.delete(category)
+                        db.session.commit()
+                        flash('Category deleted successfully')
+    
+    # Get current settings for template
+    ga_tracking_id = Settings.get_setting('ga_tracking_id', '')
+    categories = Category.query.order_by(Category.name).all()
+    
+    return render_template('settings.html',
+                         ga_tracking_id=ga_tracking_id,
+                         categories=categories)
+
+# Update existing template context processor
+@bp.context_processor
+def utility_processor():
+    return {
+        'ga_tracking_id': getattr(g, 'ga_tracking_id', None)
+    }
 
 @bp.route('/uploads/<filename>')
 def uploaded_files(filename):
