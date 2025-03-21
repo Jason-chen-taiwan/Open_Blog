@@ -13,6 +13,8 @@ A one-click deployable blog system built with Flask. Create your personal blog i
 - 🔒 CSRF Protection
 - 🚫 Rate Limiting
 - 🖼️ Image Upload & Management
+- 📊 Google Analytics Integration
+- 📑 Custom Category Management
 
 ## Technology Stack
 
