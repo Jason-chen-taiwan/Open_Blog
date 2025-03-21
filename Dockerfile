@@ -30,15 +30,17 @@ ENV FLASK_APP=blog.app \
     FLASK_ENV=production \
     PYTHONUNBUFFERED=1
 
-# Download wait-for-it script and set permissions
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
-RUN chmod +x /wait-for-it.sh && \
-    dos2unix /wait-for-it.sh
+# Set up entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    dos2unix /usr/local/bin/docker-entrypoint.sh
 
-# Convert line endings and set permissions for entrypoint
-RUN dos2unix docker-entrypoint.sh && \
-    chmod +x docker-entrypoint.sh
+# Download and set up wait-for-it script
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /usr/local/bin/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it.sh && \
+    dos2unix /usr/local/bin/wait-for-it.sh
 
 EXPOSE 5000
 
-ENTRYPOINT ["/app/docker-entrypoint.sh"]
+# Change ENTRYPOINT to use the script from /usr/local/bin
+ENTRYPOINT ["docker-entrypoint.sh"]
