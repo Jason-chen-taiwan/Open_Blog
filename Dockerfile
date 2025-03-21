@@ -37,7 +37,9 @@ ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.s
 RUN dos2unix /usr/local/bin/wait-for-it && \
     dos2unix docker-entrypoint.sh && \
     chmod +x /usr/local/bin/wait-for-it && \
-    chmod +x docker-entrypoint.sh
+    chmod +x docker-entrypoint.sh && \
+    chmod -R 755 blog/static/uploads && \
+    chmod -R 755 blog/static/img
 
 # Change the command to use wait script
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
