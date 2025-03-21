@@ -45,12 +45,10 @@ python setupp_credentials.py --reset
 ```bash
 # Copy environment template
 cp .env.example .env
-
-# Launch all services
-docker compose up -d
-
-# Wait for services to be ready
-docker compose logs -f
+# if production
+./switch-env.sh prod
+# if test
+./switch-env.sh dev
 ```
 
 3. Get admin credentials:
