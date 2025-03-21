@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .map(
         (post) => `
         <article class="post fade-in">
-            <h2><a href="/post/${post.id}">${post.title}</a></h2>
+            <h2><a href="/post/${post.slug}">${post.title}</a></h2>
             <p class="meta">
                 Posted on ${new Date(post.created_at).toLocaleDateString()} ${
           post.category
@@ -140,10 +140,10 @@ document.addEventListener("DOMContentLoaded", () => {
               post.is_admin
                 ? `
                 <div class="admin-controls">
-                    <a href="/edit/${post.id}" class="btn btn-sm btn-outline-primary">
+                    <a href="/edit/${post.slug}" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-edit me-1"></i>Edit
                     </a>
-                    <form action="/delete/${post.id}" method="POST" class="d-inline">
+                    <form action="/delete/${post.slug}" method="POST" class="d-inline">
                         <button type="submit" class="btn btn-sm btn-outline-danger" 
                                 onclick="return confirm('Are you sure you want to delete this post?')">
                             <i class="fas fa-trash me-1"></i>Delete

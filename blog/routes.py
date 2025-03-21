@@ -37,11 +37,11 @@ def home(category_name=None):
                          categories=categories,
                          current_category=category_name)
 
-@bp.route('/post/<int:post_id>')
-def post(post_id):
-    post = Post.query.get_or_404(post_id)
+@bp.route('/post/<slug>')
+def post(slug):
+    post = Post.query.filter_by(slug=slug).first_or_404()
     if current_user.is_authenticated:
-        current_app.logger.info(f"User {current_user.email} accessing post {post_id} (Admin: {current_user.is_administrator})")
+        current_app.logger.info(f"User {current_user.email} accessing post {post.slug}")
     return render_template('post.html', 
                            post=post)
 
@@ -100,11 +100,21 @@ def create():
                         db.session.add(tag)
                     post.tags.append(tag)
             
+            # 處理自定義 slug
+            custom_slug = request.form.get('slug', '').strip()
+            if custom_slug:
+                if Post.query.filter_by(slug=custom_slug).first():
+                    flash('URL already exists. Please choose another.', 'error')
+                    return render_template('create.html', categories=categories)
+                post.slug = custom_slug
+            else:
+                post.slug = post.generate_slug()
+            
             db.session.add(post)
             db.session.commit()
             
             flash('Post created successfully!')
-            return redirect(url_for('main.post', post_id=post.id))
+            return redirect(url_for('main.post', slug=post.slug))
         
         except Exception as e:
             db.session.rollback()
@@ -114,10 +124,10 @@ def create():
     
     return render_template('create.html', categories=categories)
 
-@bp.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+@bp.route('/edit/<slug>', methods=['GET', 'POST'])
 @login_required
-def edit(post_id):
-    post = Post.query.get_or_404(post_id)
+def edit(slug):
+    post = Post.query.filter_by(slug=slug).first_or_404()
     if not current_user.is_administrator:
         flash('Only administrators can edit posts')
         return redirect(url_for('main.home'))
@@ -133,7 +143,7 @@ def edit(post_id):
             category = Category.query.filter_by(name=category_name).first()
             if not category:
                 flash('Invalid category selected')
-                return redirect(url_for('main.edit', post_id=post.id))
+                return redirect(url_for('main.edit', slug=post.slug))
             
             # 更新文章內容
             post.title = title
@@ -165,13 +175,13 @@ def edit(post_id):
             db.session.commit()
             
             flash('Post updated successfully!')
-            return redirect(url_for('main.post', post_id=post.id))
+            return redirect(url_for('main.post', slug=post.slug))
             
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error updating post: {str(e)}")
             flash('An error occurred while updating the post', 'error')
-            return redirect(url_for('main.edit', post_id=post.id))
+            return redirect(url_for('main.edit', slug=post.slug))
     
     # Get request處理
     current_tags = ', '.join([tag.name for tag in post.tags])
@@ -181,36 +191,36 @@ def edit(post_id):
                          categories=categories,
                          current_tags=current_tags)
 
-@bp.route('/delete/<int:post_id>', methods=['POST'])
+@bp.route('/delete/<slug>', methods=['POST'])
 @login_required
-def delete(post_id):
+def delete(slug):
     if not current_user.is_administrator:
         flash('Only administrators can delete posts')
         return redirect(url_for('main.home'))
-    post = Post.query.get_or_404(post_id)
-    current_app.logger.info(f'Post delete attempt by {current_user.email} on post {post_id}')
+    post = Post.query.filter_by(slug=slug).first_or_404()
+    current_app.logger.info(f'Post delete attempt by {current_user.email} on post {post.slug}')
     db.session.delete(post)
     db.session.commit()
     
     flash('Post deleted successfully!')
     return redirect(url_for('main.home'))
 
-@bp.route('/comment/<int:post_id>', methods=['POST'])
+@bp.route('/comment/<slug>', methods=['POST'])
 @login_required
-def comment(post_id):
-    post = Post.query.get_or_404(post_id)
+def comment(slug):
+    post = Post.query.filter_by(slug=slug).first_or_404()
     content = request.form['content']
     
     if not content:
         flash('Comment content is required!')
-        return redirect(url_for('main.post', post_id=post.id))
+        return redirect(url_for('main.post', slug=post.slug))
     
     comment = Comment(content=content, post_id=post.id, user_id=current_user.id)
     db.session.add(comment)
     db.session.commit()
     
     flash('Comment added successfully!')
-    return redirect(url_for('main.post', post_id=post.id))
+    return redirect(url_for('main.post', slug=post.slug))
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -262,7 +272,8 @@ def get_posts():
         'image_path': post.image_path,
         'html_content': post.html_content,
         'tags': [{'id': tag.id, 'name': tag.name} for tag in post.tags],
-        'is_admin': current_user.is_authenticated and current_user.is_administrator
+        'is_admin': current_user.is_authenticated and current_user.is_administrator,
+        'slug': post.slug  # Add slug field here
     } for post in posts]
     return jsonify(posts_data)
 

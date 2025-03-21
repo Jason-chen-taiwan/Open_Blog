@@ -63,9 +63,30 @@ class Post(db.Model):
     tags = db.relationship('Tag', secondary=post_tags, backref=db.backref('posts', lazy=True))
     image_path = db.Column(db.String(255), nullable=True)
     html_content = db.Column(db.Text, nullable=True)
+    slug = db.Column(db.String(200), unique=True, nullable=False)
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.created_at}')"
+
+    def generate_slug(self):
+        """Generate a URL friendly slug from the title."""
+        # Convert title to lowercase and replace spaces with hyphens
+        base_slug = '-'.join(word.lower() for word in self.title.split() if word.isalnum())
+        slug = base_slug
+        counter = 1
+        
+        # Check for existing slugs and add number if needed
+        while Post.query.filter_by(slug=slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        
+        return slug
+
+    def save(self):
+        if not self.slug:
+            self.slug = self.generate_slug()
+        db.session.add(self)
+        db.session.commit()
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
