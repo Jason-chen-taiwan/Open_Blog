@@ -11,7 +11,7 @@ services:
           memory: 1G
     environment:
       MYSQL_DATABASE: blog_db
-      MYSQL_PASSWORD: asdfghjkl;
+      MYSQL_PASSWORD: yourpassword
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: blog_user
@@ -57,9 +57,9 @@ services:
     - FLASK_APP=blog.app
     - FLASK_DEBUG=1
     - FLASK_ENV=development
-    - MYSQL_PASSWORD=asdfghjkl;
-    - ADMIN_EMAIL=test2@gmail.com
-    - SECRET_KEY=5Na%kYy!|)nn|o(=d[,Vn2!*`5_Hg?]j|SW'^KdO5cuo!4XS4I
+    - MYSQL_PASSWORD=yourpassword
+    - ADMIN_EMAIL=admin@example.com
+    - SECRET_KEY=/+!+Oxu*_eIx6.{03f`!RF&E~^,c$:bcg3?<.C1ER0Mp,'N!wM
     healthcheck:
       interval: 30s
       retries: 3
