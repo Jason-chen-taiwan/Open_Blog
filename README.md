@@ -26,10 +26,18 @@ A one-click deployable blog system built with Flask. Create your personal blog i
 ## Quick Start
 
 1. Clone and setup:
+   setupp_credentials can help you to edit sql_user password and admin email
 
 ```bash
 git clone https://github.com/your-username/open-blog.git
 cd open-blog
+python setupp_credentials.py
+```
+
+setupp_credentials also can help you to reset config
+
+```bash
+python setupp_credentials.py --reset
 ```
 
 2. Start with Docker (Recommended):
