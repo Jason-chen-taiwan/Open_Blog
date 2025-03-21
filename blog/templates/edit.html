@@ -47,16 +47,30 @@
     modules: {
       toolbar: {
         container: [
-          ['bold', 'italic', 'underline'],
-          [{ 'header': 1 }, { 'header': 2 }],
-          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-          ['image', 'code-block']
+          ['bold', 'italic', 'underline', 'strike'],
+          ['blockquote', 'code-block'],
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          [{ 'script': 'sub'}, { 'script': 'super' }],
+          [{ 'indent': '-1'}, { 'indent': '+1' }],
+          [{ 'direction': 'rtl' }],
+          [{ 'size': ['small', false, 'large', 'huge'] }],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'font': [] }],
+          [{ 'align': [] }],
+          ['link', 'image', 'video'],
+          ['clean']
         ],
         handlers: {
-          image: imageHandler
+          image: imageHandler,
+          video: videoHandler
         }
+      },
+      clipboard: {
+        matchVisual: false
       }
-    }
+    },
+    placeholder: 'Edit your content here...',
   });
 
   function imageHandler() {
@@ -86,6 +100,18 @@
         console.warn('Please select an image file.');
       }
     };
+  }
+
+  function videoHandler() {
+    const range = quill.getSelection();
+    const value = prompt('Please enter the video URL:');
+    if(value){
+      if(value.includes('youtube.com') || value.includes('vimeo.com')) {
+        quill.insertEmbed(range.index, 'video', value, 'user');
+      } else {
+        alert('Please enter a valid YouTube or Vimeo URL');
+      }
+    }
   }
 
   document.getElementById('postForm').onsubmit = function() {
