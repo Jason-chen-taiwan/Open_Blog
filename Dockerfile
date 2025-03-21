@@ -30,12 +30,15 @@ ENV FLASK_APP=blog.app \
     FLASK_ENV=production \
     PYTHONUNBUFFERED=1
 
-# Convert line endings and set permissions
-RUN find . -type f -name "*.sh" -exec dos2unix {} \; && \
-    find . -type f -name "*.sh" -exec chmod +x {} \; && \
-    chmod +x docker-entrypoint.sh && \
-    chown -R root:root .
+# Download wait-for-it script and set permissions
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh && \
+    dos2unix /wait-for-it.sh
+
+# Convert line endings and set permissions for entrypoint
+RUN dos2unix docker-entrypoint.sh && \
+    chmod +x docker-entrypoint.sh
 
 EXPOSE 5000
 
-ENTRYPOINT ["bash", "/app/docker-entrypoint.sh"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

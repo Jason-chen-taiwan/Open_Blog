@@ -2,7 +2,7 @@
 set -e
 
 echo "Waiting for MySQL to be ready..." >&2
-/usr/local/bin/wait-for-it ${MYSQL_HOST}:3306 -t 30
+/wait-for-it.sh ${MYSQL_HOST}:3306 -t 30
 
 echo "Running database migrations..." >&2
 flask db upgrade
