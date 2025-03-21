@@ -29,8 +29,12 @@ A one-click deployable blog system built with Flask. Create your personal blog i
    setupp_credentials can help you to edit sql_user password and admin email
 
 ```bash
+
 git clone https://github.com/your-username/open-blog.git
 cd open-blog
+
+# Copy environment template
+cp .env.example .env
 python setupp_credentials.py
 ```
 
@@ -43,8 +47,6 @@ python setupp_credentials.py --reset
 2. Start with Docker (Recommended):
 
 ```bash
-# Copy environment template
-cp .env.example .env
 # if production
 ./switch-env.sh prod
 # if test
