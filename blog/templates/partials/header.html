@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg sticky-top">
     <div class="container">
       <!-- Logo -->
-      <a class="navbar-brand" href="{{ url_for('main.home') }}">
+      <a class="navbar-brand" href="{{ url_for('post.home') }}">
         <img
           src="{{ url_for('static', filename='img/logo.png') }}"
           alt="Blog Logo"
@@ -26,7 +26,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+            <a class="nav-link" href="{{ url_for('post.home') }}">Home</a>
           </li>
           <li class="nav-item dropdown">
             <a
@@ -61,15 +61,15 @@
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.about') }}">About Me</a>
+            <a class="nav-link" href="{{ url_for('pages.about') }}">About Me</a>
           </li>
           {% if current_user.is_authenticated and current_user.is_administrator
           %}
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.create') }}">New Post</a>
+            <a class="nav-link" href="{{ url_for('post.create') }}">New Post</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('main.settings') }}"
+            <a class="nav-link" href="{{ url_for('admin.settings') }}"
               >Settings</a
             >
           </li>
@@ -82,14 +82,14 @@
           <span class="nav-item nav-link text-info">
             <i class="fas fa-user me-1"></i>{{ current_user.email }}
           </span>
-          <a class="nav-link" href="{{ url_for('main.logout') }}">
+          <a class="nav-link" href="{{ url_for('auth.logout') }}">
             <i class="fas fa-sign-out-alt me-1"></i>Logout
           </a>
           {% else %}
-          <a class="nav-link" href="{{ url_for('main.login') }}">
+          <a class="nav-link" href="{{ url_for('auth.login') }}">
             <i class="fas fa-sign-in-alt me-1"></i>Login
           </a>
-          <a class="nav-link" href="{{ url_for('main.register') }}">
+          <a class="nav-link" href="{{ url_for('auth.register') }}">
             <i class="fas fa-user-plus me-1"></i>Register
           </a>
           {% endif %}

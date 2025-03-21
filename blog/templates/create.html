@@ -5,7 +5,7 @@
   <form
     id="postForm"
     method="POST"
-    action="{{ url_for('main.create') }}"
+    action="{{ url_for('post.create') }}"
     enctype="multipart/form-data"
   >
     <div class="form-group mb-3">
@@ -118,7 +118,7 @@
         var formData = new FormData();
         formData.append("image", file);
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", '{{ url_for("main.upload") }}', true);
+        xhr.open("POST", '{{ url_for("upload.upload") }}', true);
         xhr.onload = function () {
           if (xhr.status === 200) {
             var response = JSON.parse(xhr.responseText);

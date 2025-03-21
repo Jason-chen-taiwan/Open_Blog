@@ -55,7 +55,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
-    login_manager.login_view = 'main.login'
+    login_manager.login_view = 'auth.login'  # 修改這裡：從 'main.login' 改為 'auth.login'
     
     # Initialize Flask-Limiter
     global limiter
@@ -74,9 +74,9 @@ def create_app():
         from .models import User
         return User.query.get(int(user_id))
 
-    # Import and register blueprint
-    from .routes import bp
-    app.register_blueprint(bp)
+    # Register routes
+    from .routes import init_app as init_routes
+    init_routes(app)
     
     # Initialize database
     with app.app_context():
