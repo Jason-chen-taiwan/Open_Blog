@@ -101,50 +101,59 @@ document.addEventListener("DOMContentLoaded", () => {
     const postsHTML = posts
       .map(
         (post) => `
-      <article class="post fade-in">
-        <h2>
-          <a href="/post/${post.id}">${post.title}</a>
-        </h2>
-        <p class="meta">
-          Posted on ${new Date(post.created_at).toLocaleDateString()} in
-          <a href="#" class="category-filter" data-category="${
-            post.category
-          }">${post.category}</a>
-        </p>
-        ${
-          post.tags
-            ? `
-          <div class="tags">
-            Tags: ${post.tags
-              .map(
-                (tag) => `
-              <a href="#">${tag.name}</a>
+        <article class="post fade-in">
+            <h2><a href="/post/${post.id}">${post.title}</a></h2>
+            <p class="meta">
+                Posted on ${new Date(post.created_at).toLocaleDateString()} ${
+          post.category
+            ? `in <a href="#" class="category-filter" data-category="${post.category}">${post.category}</a>`
+            : ""
+        }
+            </p>
+            ${
+              post.tags && post.tags.length
+                ? `
+                <div class="tags">
+                    Tags: ${post.tags
+                      .map((tag) => `<a href="#">${tag.name}</a>`)
+                      .join(", ")}
+                </div>
             `
-              )
-              .join(", ")}
-          </div>
-        `
-            : ""
-        }
-        <p>${post.content.substring(0, 200)}...</p>
-        ${
-          post.is_admin
-            ? `
-          <div class="admin-controls">
-            <a href="/edit/${post.id}" class="btn btn-sm btn-outline-primary">
-              <i class="fas fa-edit me-1"></i>Edit
-            </a>
-            <form action="/delete/${post.id}" method="POST" class="d-inline">
-              <button type="submit" class="btn btn-sm btn-outline-danger"
-                      onclick="return confirm('Are you sure you want to delete this post?')">
-                <i class="fas fa-trash me-1"></i>Delete
-              </button>
-            </form>
-          </div>
-        `
-            : ""
-        }
-      </article>
+                : ""
+            }
+            ${
+              post.image_path
+                ? `
+                <div class="post-thumbnail mb-3">
+                    <img src="/static/${post.image_path}" alt="${post.title}" class="img-fluid rounded">
+                </div>
+            `
+                : ""
+            }
+            <p>${
+              post.html_content
+                ? post.html_content.replace(/<[^>]*>/g, "").substring(0, 200) +
+                  "..."
+                : ""
+            }</p>
+            ${
+              post.is_admin
+                ? `
+                <div class="admin-controls">
+                    <a href="/edit/${post.id}" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </a>
+                    <form action="/delete/${post.id}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                onclick="return confirm('Are you sure you want to delete this post?')">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </button>
+                    </form>
+                </div>
+            `
+                : ""
+            }
+        </article>
     `
       )
       .join("");

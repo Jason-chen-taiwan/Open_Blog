@@ -47,14 +47,14 @@
                 >
               </li>
               <li><hr class="dropdown-divider" /></li>
-              {% for category in ['Cybersecurity', 'AI', 'Blockchain'] %}
+              {% for category in categories %}
               <li>
                 <a
                   class="dropdown-item category-filter"
                   href="#"
-                  data-category="{{ category }}"
+                  data-category="{{ category.name }}"
                 >
-                  {{ category }}
+                  {{ category.name }}
                 </a>
               </li>
               {% endfor %}
@@ -67,6 +67,11 @@
           %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('main.create') }}">New Post</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('main.manage_categories') }}"
+              >Manage Categories</a
+            >
           </li>
           {% endif %}
         </ul>

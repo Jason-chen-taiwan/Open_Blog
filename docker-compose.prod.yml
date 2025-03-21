@@ -1,0 +1,107 @@
+services:
+  mysql:
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --bind-address=0.0.0.0
+    container_name: blog-mysql
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blog_db
+      MYSQL_USER: blog_user
+      MYSQL_PASSWORD: yourpassword
+      MYSQL_ROOT_HOST: "%"
+      TZ: UTC
+    healthcheck:
+      interval: 5s
+      retries: 5
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -u$$MYSQL_USER
+        - -p$$MYSQL_PASSWORD
+      timeout: 5s
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    restart: unless-stopped
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  web:
+    build: .
+    command:
+      - gunicorn
+      - --bind
+      - 0.0.0.0:5000
+      - --workers
+      - "3"
+      - --access-logfile
+      - "-"
+      - --error-logfile
+      - "-"
+      - --capture-output
+      - --log-level
+      - info
+      - blog.app:app
+    container_name: blog-web-prod
+    depends_on:
+      mysql:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=blog_user
+      - MYSQL_DATABASE=blog_db
+      - SECRET_KEY=your-production-secret-key-here
+      - FLASK_APP=blog.app
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+      - PYTHONUNBUFFERED=1
+      - PYTHON_UNBUFFERED="true"
+      - PYTHONIOENCODING=UTF-8
+      - FLASK_DEBUG=0
+      - FLASK_ENV=production
+      - SECRET_KEY=/G[`/C`#G/ZL{Qe+[$~p!GkVM9oQU{lnv:L-cGm"G*><QC@T|B
+      - SECRET_KEY=idnJy]/vsa{!zwFioivqyBK(-8xY/Fyb\MIo4Sq9Xf11S%M,?y
+      - SECRET_KEY=3;myZ0qTs1Me<Bai?R9TQG}|rt5CtZB<Ut@B`G^!nwj"5Q!Z\3
+      - SECRET_KEY=zodjY@7Q<]'lJB:N7Ut"U82s=9jNe1yF4e,n!zFguQ+JW\bo]"
+      - MYSQL_PASSWORD=yourpassword
+      - ADMIN_EMAIL=admin@example.com
+      - SECRET_KEY=Y.wMX7fl*pc'V"QZB*JhcGtv[&o-2<SPy8l$G]=dcC[fjscB&+
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 40s
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:5000/ || exit 1
+      timeout: 10s
+    logging:
+      driver: json-file
+      options:
+        max-file: "3"
+        max-size: 10m
+    ports:
+      - 5000:5000
+    restart: on-failure:3
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - ./blog/static/uploads:/app/blog/static/uploads
+      - ./blog/static/img:/app/blog/static/img
+volumes:
+  mysql_data: null

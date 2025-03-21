@@ -504,3 +504,71 @@ sudo ufw allow http
 sudo ufw allow 5000
 sudo ufw enable
 ```
+
+## Category Management
+
+Administrators can:
+
+1. Create new categories
+2. View all categories and their post counts
+3. Delete empty categories
+4. Filter posts by category
+
+Categories are automatically:
+
+- URL friendly
+- Unique across the system
+- Connected to posts via foreign keys
+- Protected from deletion if they contain posts
+
+### Managing Categories
+
+```bash
+# Access category management (admin only)
+http://localhost:5000/categories
+
+# Filter posts by category
+http://localhost:5000/category/<category-name>
+```
+
+## Troubleshooting
+
+### Image Upload Issues
+
+1. Check upload directory permissions:
+
+```bash
+# Create upload directories
+mkdir -p blog/static/uploads blog/static/img
+
+# Set permissions
+chmod 755 blog/static/uploads
+chmod 755 blog/static/img
+```
+
+2. Verify file types:
+
+- Only .png, .jpg, .jpeg and .gif are allowed
+- Max file size is 16MB by default
+
+3. Check logs for upload errors:
+
+```bash
+docker compose logs web | grep "upload"
+```
+
+### Category Issues
+
+1. Database migrations:
+
+```bash
+flask db upgrade
+```
+
+2. Check category relationships:
+
+```bash
+docker compose exec mysql mysql -u blog_user -p blog_db
+mysql> SELECT * FROM category;
+mysql> SELECT category_id, COUNT(*) FROM post GROUP BY category_id;
+```

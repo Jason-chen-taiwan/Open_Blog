@@ -1,43 +1,60 @@
 {% extends "base.html" %} {% block content %}
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
-<h1>Create New Post</h1>
-<form
-  id="postForm"
-  method="POST"
-  action="{{ url_for('main.create') }}"
-  enctype="multipart/form-data"
->
-  <div class="form-group">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" required />
-  </div>
-  <!-- 封面圖片（非文章內嵌圖片）-->
-  <div class="form-group">
-    <label for="image">Cover Image (optional):</label>
-    <input type="file" id="image" name="image" accept="image/*" />
-  </div>
-  <div class="form-group">
-    <label for="editor">Content:</label>
-    <div id="editor" style="height: 300px"></div>
-    <!-- 隱藏欄位用來儲存 Quill 產生的 HTML 內容 -->
-    <input type="hidden" name="content" id="content" />
-  </div>
-  <div class="form-group">
-    <label for="category">Category:</label>
-    <select id="category" name="category" required>
-      {% for category in categories %}
-      <option value="{{ category }}">{{ category }}</option>
-      {% endfor %}
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="tags">Tags (comma separated):</label>
-    <input type="text" id="tags" name="tags" />
-  </div>
-  <button type="submit">Create Post</button>
-</form>
+<div class="container">
+  <h1>Create New Post</h1>
+  <form
+    id="postForm"
+    method="POST"
+    action="{{ url_for('main.create') }}"
+    enctype="multipart/form-data"
+  >
+    <div class="form-group mb-3">
+      <label for="title">Title:</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="form-control"
+        required
+      />
+    </div>
 
-<!-- 載入 Quill JS -->
+    <div class="form-group mb-3">
+      <label for="image">Cover Image (optional):</label>
+      <input
+        type="file"
+        id="image"
+        name="image"
+        class="form-control"
+        accept="image/*"
+      />
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="category">Category:</label>
+      <select id="category" name="category" class="form-control" required>
+        <option value="">Select a category</option>
+        {% for category in categories %}
+        <option value="{{ category.name }}">{{ category.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="editor">Content:</label>
+      <div id="editor" style="height: 300px"></div>
+      <input type="hidden" name="content" id="content" />
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="tags">Tags (comma separated):</label>
+      <input type="text" id="tags" name="tags" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Post</button>
+  </form>
+</div>
+
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
   // 初始化 Quill 編輯器

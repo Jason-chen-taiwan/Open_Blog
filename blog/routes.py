@@ -1,10 +1,10 @@
 import os
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from flask import Blueprint, render_template, request, redirect, send_from_directory, url_for, flash, current_app, jsonify
+from flask import Blueprint, render_template, request, redirect, send_from_directory, url_for, flash, current_app, jsonify, g, g
 from flask_login import login_user, logout_user, login_required, current_user
 from . import db, limiter
-from .models import Post, Comment, User, Tag
+from .models import Post, Comment, User, Tag, Category
 from .forms import RegistrationForm, LoginForm
 
 # 設定圖片上傳的資料夾與允許的檔案類型
@@ -20,16 +20,18 @@ def allowed_file(filename):
 bp = Blueprint('main', __name__)
 
 @bp.route('/')
-@bp.route('/category/<category>')
-def home(category=None):
+@bp.route('/category/<category_name>')
+def home(category_name=None):
     query = Post.query
-    if category:
-        query = query.filter_by(category=category)
+    if category_name:
+        category = Category.query.filter_by(name=category_name).first_or_404()
+        query = query.filter_by(category_id=category.id)
     posts = query.order_by(Post.created_at.desc()).all()
+    categories = Category.query.order_by(Category.name).all()
     return render_template('home.html', 
-                           posts=posts, 
-                           current_category=category,
-                           categories=['Cybersecurity', 'AI', 'Blockchain'])
+                         posts=posts,
+                         categories=categories,
+                         current_category=category_name)
 
 @bp.route('/post/<int:post_id>')
 def post(post_id):
@@ -37,8 +39,7 @@ def post(post_id):
     if current_user.is_authenticated:
         current_app.logger.info(f"User {current_user.email} accessing post {post_id} (Admin: {current_user.is_administrator})")
     return render_template('post.html', 
-                           post=post,
-                           categories=['Cybersecurity', 'AI', 'Blockchain'])
+                           post=post)
 
 @bp.route('/about')
 def about():
@@ -50,37 +51,40 @@ def create():
     if not current_user.is_administrator:
         flash('Only administrators can create posts')
         return redirect(url_for('main.home'))
+
     current_app.logger.info(f'Post creation attempt by {current_user.email}')
+    categories = Category.query.order_by(Category.name).all()
+
     if request.method == 'POST':
         try:
             title = request.form['title']
-            # 由 Quill 送出的內容已是 HTML
             content = request.form['content']
-            category = request.form['category']
+            category_name = request.form['category']
             tags = request.form.get('tags', '').split(',')
             
-            # 若有上傳封面圖片（非文章內嵌圖片，由 Quill 處理內嵌圖片上傳）
-            image_path = None
+            # 取得對應的 Category 對象
+            category = Category.query.filter_by(name=category_name).first()
+            if not category:
+                flash('Invalid category selected')
+                return render_template('create.html', categories=categories)
+            
+            # 建立 Post 對象
+            post = Post(
+                title=title,
+                content=content,
+                html_content=content,
+                category_id=category.id,
+                user_id=current_user.id
+            )
+            
+            # 處理圖片上傳
             if 'image' in request.files:
                 file = request.files['image']
                 if file and file.filename and allowed_file(file.filename):
                     filename = secure_filename(f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}")
                     file_path = os.path.join(UPLOAD_FOLDER, filename)
                     file.save(file_path)
-                    image_path = f"uploads/{filename}"
-            
-            # 內容直接存 HTML，不用轉 Markdown
-            html_content = content
-            
-            # 建立 Post 物件
-            post = Post(
-                title=title,
-                content=content,
-                html_content=html_content,
-                category=category,
-                user_id=current_user.id,
-                image_path=image_path
-            )
+                    post.image_path = f"uploads/{filename}"
             
             # 處理標籤
             for tag_name in tags:
@@ -96,15 +100,15 @@ def create():
             db.session.commit()
             
             flash('Post created successfully!')
-            return redirect(url_for('main.home'))
+            return redirect(url_for('main.post', post_id=post.id))
         
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error creating post: {str(e)}")
             flash('An error occurred while creating the post', 'error')
-            return redirect(url_for('main.create'))
+            return render_template('create.html', categories=categories)
     
-    return render_template('create.html', categories=['Cybersecurity', 'AI', 'Blockchain'])
+    return render_template('create.html', categories=categories)
 
 @bp.route('/edit/<int:post_id>', methods=['GET', 'POST'])
 @login_required
@@ -113,46 +117,65 @@ def edit(post_id):
     if not current_user.is_administrator:
         flash('Only administrators can edit posts')
         return redirect(url_for('main.home'))
-    current_app.logger.info(f'Post edit attempt by {current_user.email} on post {post_id}')
     
     if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
-        category = request.form['category']
-        tags = request.form.get('tags', '').split(',')
-        
-        if not title or not content:
-            flash('Title and content are required!')
+        try:
+            title = request.form['title']
+            content = request.form['content']
+            category_name = request.form['category']
+            tags = request.form.get('tags', '').split(',')
+            
+            # 獲取對應的 Category 對象
+            category = Category.query.filter_by(name=category_name).first()
+            if not category:
+                flash('Invalid category selected')
+                return redirect(url_for('main.edit', post_id=post.id))
+            
+            # 更新文章內容
+            post.title = title
+            post.content = content
+            post.html_content = content
+            post.category_id = category.id  # 使用 category.id 而不是 category 物件
+            post.updated_at = datetime.utcnow()
+            
+            # 處理圖片上傳 (新增)
+            if 'image' in request.files:
+                file = request.files['image']
+                if file and file.filename and allowed_file(file.filename):
+                    filename = secure_filename(f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}")
+                    file_path = os.path.join(UPLOAD_FOLDER, filename)
+                    file.save(file_path)
+                    post.image_path = f"uploads/{filename}"
+            
+            # 更新標籤
+            post.tags = []
+            for tag_name in tags:
+                tag_name = tag_name.strip()
+                if tag_name:
+                    tag = Tag.query.filter_by(name=tag_name).first()
+                    if not tag:
+                        tag = Tag(name=tag_name)
+                        db.session.add(tag)
+                    post.tags.append(tag)
+            
+            db.session.commit()
+            
+            flash('Post updated successfully!')
+            return redirect(url_for('main.post', post_id=post.id))
+            
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.error(f"Error updating post: {str(e)}")
+            flash('An error occurred while updating the post', 'error')
             return redirect(url_for('main.edit', post_id=post.id))
-        
-        post.title = title
-        post.content = content
-        post.html_content = content  # 內容已是 HTML
-        post.category = category
-        post.updated_at = datetime.utcnow()
-        
-        # 更新標籤
-        post.tags = []
-        for tag_name in tags:
-            tag_name = tag_name.strip()
-            if tag_name:
-                tag = Tag.query.filter_by(name=tag_name).first()
-                if not tag:
-                    tag = Tag(name=tag_name)
-                    db.session.add(tag)
-                post.tags.append(tag)
-        
-        db.session.commit()
-        
-        flash('Post updated successfully!')
-        return redirect(url_for('main.post', post_id=post.id))
     
-    # 將目前標籤轉換成逗號分隔字串
+    # Get request處理
     current_tags = ', '.join([tag.name for tag in post.tags])
+    categories = Category.query.order_by(Category.name).all()
     return render_template('edit.html', 
-                           post=post, 
-                           categories=['Cybersecurity', 'AI', 'Blockchain'],
-                           current_tags=current_tags)
+                         post=post,
+                         categories=categories,
+                         current_tags=current_tags)
 
 @bp.route('/delete/<int:post_id>', methods=['POST'])
 @login_required
@@ -216,17 +239,24 @@ def logout():
 
 @bp.route('/api/posts')
 def get_posts():
-    category = request.args.get('category')
+    category_name = request.args.get('category')
     query = Post.query
-    if category:
-        query = query.filter_by(category=category)
+    
+    if category_name:
+        # 通過 category name 查詢對應的 category
+        category = Category.query.filter_by(name=category_name).first()
+        if category:
+            query = query.filter_by(category_id=category.id)
+    
     posts = query.order_by(Post.created_at.desc()).all()
     posts_data = [{
         'id': post.id,
-        'title': post.title,
+        'title': post.title, 
         'content': post.content,
-        'category': post.category,
+        'category': post.category.name if post.category else None,
         'created_at': post.created_at.isoformat(),
+        'image_path': post.image_path,
+        'html_content': post.html_content,
         'tags': [{'id': tag.id, 'name': tag.name} for tag in post.tags],
         'is_admin': current_user.is_authenticated and current_user.is_administrator
     } for post in posts]
@@ -252,7 +282,39 @@ def upload():
         return jsonify({'url': url})
     return jsonify({'error': 'File type not allowed'}), 400
 
-
+@bp.route('/categories', methods=['GET', 'POST'])
+@login_required
+def manage_categories():
+    if not current_user.is_administrator:
+        flash('Only administrators can manage categories')
+        return redirect(url_for('main.home'))
+    
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'add':
+            name = request.form.get('name')
+            if name:
+                category = Category.query.filter_by(name=name).first()
+                if category:
+                    flash('Category already exists')
+                else:
+                    category = Category(name=name)
+                    db.session.add(category)
+                    db.session.commit()
+                    flash('Category added successfully')
+        elif action == 'delete':
+            category_id = request.form.get('category_id')
+            if category_id:
+                category = Category.query.get_or_404(category_id)
+                if category.posts:
+                    flash('Cannot delete category with existing posts')
+                else:
+                    db.session.delete(category)
+                    db.session.commit()
+                    flash('Category deleted successfully')
+    
+    categories = Category.query.order_by(Category.name).all()
+    return render_template('manage_categories.html', categories=categories)
 
 @bp.route('/uploads/<filename>')
 def uploaded_files(filename):
