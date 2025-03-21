@@ -59,16 +59,16 @@ def setup_credentials(reset=False):
                 env_vars = docker_compose['services']['web'].get('environment', [])
                 new_env_vars = []
                 
-                # Remove existing vars we want to update
+                # Remove all existing SECRET_KEY entries
                 for var in env_vars:
-                    if isinstance(var, str) and not any(var.startswith(x) for x in ['MYSQL_PASSWORD=', 'ADMIN_EMAIL=']):
+                    if isinstance(var, str) and not any(var.startswith(x) for x in ['MYSQL_PASSWORD=', 'ADMIN_EMAIL=', 'SECRET_KEY=']):
                         new_env_vars.append(var)
                 
-                # Add updated variables
+                # Add only one set of credentials
                 new_env_vars.extend([
                     f'MYSQL_PASSWORD={mysql_password}',
                     f'ADMIN_EMAIL={admin_email}',
-                    f'SECRET_KEY={secret_key}'
+                    f'SECRET_KEY={secret_key}'  # 只添加一個 SECRET_KEY
                 ])
                 
                 docker_compose['services']['web']['environment'] = new_env_vars
@@ -84,10 +84,10 @@ def setup_credentials(reset=False):
     
     # Create/update .env file
     env_content = f"""
-MYSQL_PASSWORD={mysql_password}
-ADMIN_EMAIL={admin_email}
-SECRET_KEY={secret_key}
-"""
+    MYSQL_PASSWORD={mysql_password}
+    ADMIN_EMAIL={admin_email}
+    SECRET_KEY={secret_key}
+    """
     
     with open('.env', 'w') as f:
         f.write(env_content.strip())

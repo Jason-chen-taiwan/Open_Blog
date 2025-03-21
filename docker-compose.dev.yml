@@ -1,7 +1,9 @@
 services:
   mysql:
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-      --default-authentication-plugin=mysql_native_password --init-file=/docker-entrypoint-initdb.d/init.sql
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci --bind-address=0.0.0.0
+
+      '
     container_name: blog-mysql
     deploy:
       resources:
@@ -9,7 +11,7 @@ services:
           memory: 1G
     environment:
       MYSQL_DATABASE: blog_db
-      MYSQL_PASSWORD: yourpassword
+      MYSQL_PASSWORD: asdfghjkl;
       MYSQL_ROOT_HOST: '%'
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: blog_user
@@ -55,11 +57,9 @@ services:
     - FLASK_APP=blog.app
     - FLASK_DEBUG=1
     - FLASK_ENV=development
-    - SECRET_KEY=dev-secret-key
-    - SECRET_KEY=zodjY@7Q<]'lJB:N7Ut"U82s=9jNe1yF4e,n!zFguQ+JW\bo]"
-    - MYSQL_PASSWORD=yourpassword
-    - ADMIN_EMAIL=admin@example.com
-    - SECRET_KEY=Y.wMX7fl*pc'V"QZB*JhcGtv[&o-2<SPy8l$G]=dcC[fjscB&+
+    - MYSQL_PASSWORD=asdfghjkl;
+    - ADMIN_EMAIL=test2@gmail.com
+    - SECRET_KEY=5Na%kYy!|)nn|o(=d[,Vn2!*`5_Hg?]j|SW'^KdO5cuo!4XS4I
     healthcheck:
       interval: 30s
       retries: 3

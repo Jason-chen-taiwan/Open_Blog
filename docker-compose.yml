@@ -9,7 +9,7 @@ services:
           memory: 1G
     environment:
       MYSQL_DATABASE: blog_db
-      MYSQL_PASSWORD: yourpassword
+      MYSQL_PASSWORD: asdfghjkl;
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: blog_user
     healthcheck:
@@ -59,20 +59,15 @@ services:
     - MYSQL_HOST=mysql
     - MYSQL_USER=blog_user
     - MYSQL_DATABASE=blog_db
-    - SECRET_KEY=your-production-secret-key-here
     - FLASK_APP=blog.app
     - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
     - PYTHONUNBUFFERED=1
     - PYTHON_UNBUFFERED="true"
     - PYTHONIOENCODING=UTF-8
     - FLASK_DEBUG=1
-    - SECRET_KEY=/G[`/C`#G/ZL{Qe+[$~p!GkVM9oQU{lnv:L-cGm"G*><QC@T|B
-    - SECRET_KEY=idnJy]/vsa{!zwFioivqyBK(-8xY/Fyb\MIo4Sq9Xf11S%M,?y
-    - SECRET_KEY=3;myZ0qTs1Me<Bai?R9TQG}|rt5CtZB<Ut@B`G^!nwj"5Q!Z\3
-    - SECRET_KEY=zodjY@7Q<]'lJB:N7Ut"U82s=9jNe1yF4e,n!zFguQ+JW\bo]"
-    - MYSQL_PASSWORD=yourpassword
-    - ADMIN_EMAIL=admin@example.com
-    - SECRET_KEY=Y.wMX7fl*pc'V"QZB*JhcGtv[&o-2<SPy8l$G]=dcC[fjscB&+
+    - MYSQL_PASSWORD=asdfghjkl;
+    - ADMIN_EMAIL=test2@gmail.com
+    - SECRET_KEY=5Na%kYy!|)nn|o(=d[,Vn2!*`5_Hg?]j|SW'^KdO5cuo!4XS4I
     healthcheck:
       interval: 30s
       retries: 3
