@@ -54,7 +54,55 @@ setupp_credentials also can help you to reset config
 python setupp_credentials.py --reset
 ```
 
-2. Start with Docker (Recommended):
+## Customizing Your About Page
+
+The About page can be fully customized through the admin settings panel:
+
+1. Base Profile Settings:
+
+   - Profile image
+   - Name and title
+   - Short introduction
+   - Background text
+
+2. Content Sections:
+
+   - Research Projects
+   - Publications
+   - Professional Experience
+   - Technical Skills
+   - Current Projects
+
+3. Replacing Default About Page
+
+Recommended approach:
+
+```bash
+# Generate custom content using AI
+# Use tools like Monica AI with your CV  and defalt about.html to generate professional content
+https://monica.im/invitation-affiliate?ref=zgmwytv&ref_aff=zgmwytv
+# Example prompt:
+"Help me edit the About page HTML content based on my CV, following this structure:
+- Profile section
+- Background
+- Professional Experience
+- Skills & Technologies
+- Projects & Publications"
+```
+
+Replace the content:
+
+- Locate `blog/templates/about.html`
+- Replace the template content while keeping the structure
+
+Best practices:
+
+- Keep the responsive design elements
+- Maintain heading hierarchy
+- Use provided CSS classes for consistent styling
+- Test mobile view
+
+3. Start with Docker (Recommended):
 
 ```bash
 # if production
@@ -63,14 +111,14 @@ python setupp_credentials.py --reset
 ./switch-env.sh dev
 ```
 
-3. Get admin credentials:
+4. Get admin credentials:
 
 ```bash
 # Check admin account information
 docker compose logs web | grep "Admin Account"
 ```
 
-4. Access your blog:
+5. Access your blog:
 
 - URL: http://localhost:5000
 - Default admin email: admin@example.com
@@ -548,52 +596,6 @@ http://localhost:5000/categories
 # Filter posts by category
 http://localhost:5000/category/<category-name>
 ```
-
-## Customizing Your About Page
-
-The About page can be fully customized through the admin settings panel:
-
-1. Base Profile Settings:
-
-   - Profile image
-   - Name and title
-   - Short introduction
-   - Background text
-
-2. Content Sections:
-   - Research Projects
-   - Publications
-   - Professional Experience
-   - Technical Skills
-   - Current Projects
-
-### Replacing Default About Page
-
-1. Recommended approach:
-
-   ```bash
-   # Generate custom content using AI
-   # Use tools like Monica AI with your CV  and defalt about.html to generate professional content
-   https://monica.im/invitation-affiliate?ref=zgmwytv&ref_aff=zgmwytv
-   # Example prompt:
-   "Help me edit the About page HTML content based on my CV, following this structure:
-   - Profile section
-   - Background
-   - Professional Experience
-   - Skills & Technologies
-   - Projects & Publications"
-   ```
-
-2. Replace the content:
-
-   - Locate `blog/templates/about.html`
-   - Replace the template content while keeping the structure
-
-3. Best practices:
-   - Keep the responsive design elements
-   - Maintain heading hierarchy
-   - Use provided CSS classes for consistent styling
-   - Test mobile view
 
 ### Coming Soon
 
