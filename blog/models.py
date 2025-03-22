@@ -123,3 +123,12 @@ class Settings(db.Model):
             setting = cls(key=key, value=value)
             db.session.add(setting)
         db.session.commit()
+
+    @classmethod
+    def get_blog_settings(cls):
+        """Get all blog settings as a dict"""
+        return {
+            'blog_name': cls.get_setting('blog_name', 'JasonCrypto\'s Blog'),
+            'logo_path': cls.get_setting('logo_path', 'img/logo.png'),
+            'ga_tracking_id': cls.get_setting('ga_tracking_id', '')
+        }

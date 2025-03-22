@@ -1,9 +1,24 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, current_app
 from flask_login import login_required, current_user
 from blog import db
 from blog.models import Category, Settings
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
+
+def handle_file_upload(file, directory):
+    """Helper function to handle file uploads"""
+    if file and file.filename:
+        filename = secure_filename(f"{datetime.now().strftime('%Y%m%d_%H%M%S')}_{file.filename}")
+        upload_path = os.path.join(current_app.root_path, 'static', directory)
+        if not os.path.exists(upload_path):
+            os.makedirs(upload_path)
+        file_path = os.path.join(upload_path, filename)
+        file.save(file_path)
+        return f'{directory}/{filename}'
+    return None
 
 @admin_bp.route('/settings', methods=['GET', 'POST'])
 @admin_bp.route('/settings/<type>', methods=['GET', 'POST'])
@@ -16,7 +31,23 @@ def settings(type=None):
     if request.method == 'POST':
         setting_type = request.form.get('setting_type')
         
-        if setting_type == 'ga':
+        if setting_type == 'blog_info':
+            # 處理 blog 名稱
+            blog_name = request.form.get('blog_name', '').strip()
+            if blog_name:
+                Settings.set_setting('blog_name', blog_name)
+            
+            # 處理 logo 上傳
+            if 'logo' in request.files:
+                file = request.files['logo']
+                logo_path = handle_file_upload(file, 'img')
+                if logo_path:
+                    Settings.set_setting('logo_path', logo_path)
+            
+            flash('Blog settings updated successfully')
+            return redirect(url_for('admin.settings'))
+            
+        elif setting_type == 'ga':
             ga_tracking_id = request.form.get('ga_tracking_id', '').strip()
             Settings.set_setting('ga_tracking_id', ga_tracking_id)
             flash('Google Analytics settings updated successfully')
@@ -49,8 +80,9 @@ def settings(type=None):
                 return redirect(url_for('admin.settings'))
     
     # GET request handling
-    ga_tracking_id = Settings.get_setting('ga_tracking_id', '')
-    categories = Category.query.order_by(Category.name).all()
+    blog_settings = Settings.get_blog_settings()
     return render_template('settings.html',
-                         ga_tracking_id=ga_tracking_id,
-                         categories=categories)
+                         blog_name=blog_settings['blog_name'],
+                         logo_path=blog_settings['logo_path'],
+                         ga_tracking_id=blog_settings['ga_tracking_id'],
+                         categories=Category.query.order_by(Category.name).all())

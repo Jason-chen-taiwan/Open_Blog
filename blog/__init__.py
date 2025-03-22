@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 import logging  # 新增這行
 import sys
 from flask_sqlalchemy import SQLAlchemy
@@ -73,6 +73,12 @@ def create_app():
     def load_user(user_id):
         from .models import User
         return User.query.get(int(user_id))
+
+    # 添加全局 before_request
+    @app.before_request
+    def load_settings():
+        from .models import Settings
+        g.blog_settings = Settings.get_blog_settings()
 
     # Register routes
     from .routes import init_app as init_routes

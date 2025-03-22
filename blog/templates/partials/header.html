@@ -4,12 +4,12 @@
       <!-- Logo -->
       <a class="navbar-brand" href="{{ url_for('post.home') }}">
         <img
-          src="{{ url_for('static', filename='img/logo.png') }}"
+          src="{{ url_for('static', filename=g.blog_settings.logo_path) }}"
           alt="Blog Logo"
           class="logo"
           onerror="this.src='{{ url_for('static', filename='img/default-logo.png') }}'"
         />
-        JasonCrypto's Blog
+        {{ g.blog_settings.blog_name }}
       </a>
 
       <!-- Mobile toggle -->
