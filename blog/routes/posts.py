@@ -81,15 +81,16 @@ def create():
                     file.save(file_path)
                     post.image_path = f"uploads/{filename}"
             
-            # 處理標籤
-            for tag_name in tags:
-                tag_name = tag_name.strip()
-                if tag_name:
-                    tag = Tag.query.filter_by(name=tag_name).first()
-                    if not tag:
-                        tag = Tag(name=tag_name)
-                        db.session.add(tag)
-                    post.tags.append(tag)
+            # 處理標籤 - 更新處理邏輯
+            with db.session.no_autoflush:
+                for tag_name in tags:
+                    tag_name = tag_name.strip()[:100]  # 限制標籤長度
+                    if tag_name:
+                        tag = Tag.query.filter_by(name=tag_name).first()
+                        if not tag:
+                            tag = Tag(name=tag_name)
+                            db.session.add(tag)
+                        post.tags.append(tag)
             
             # 處理自定義 slug
             custom_slug = request.form.get('slug', '').strip()
@@ -110,7 +111,7 @@ def create():
         except Exception as e:
             db.session.rollback()
             current_app.logger.error(f"Error creating post: {str(e)}")
-            flash('An error occurred while creating the post', 'error')
+            flash('An error occurred while creating the post. Tag names must be less than 100 characters.', 'error')
             return render_template('create.html', categories=categories)
     
     return render_template('create.html', categories=categories)

@@ -32,9 +32,7 @@ class User(db.Model, UserMixin):
     @property
     def is_administrator(self):
         """Helper property to check admin status"""
-        is_admin = bool(self.is_admin)
-        print(f"Checking admin status for {self.email}: {is_admin}")  # Debug log
-        return is_admin
+        return bool(self.is_admin)  # 移除 debug 日誌
 
 # Association table for many-to-many relationship between Post and Tag
 post_tags = db.Table('post_tags',
@@ -90,7 +88,7 @@ class Post(db.Model):
 
 class Tag(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(30), unique=True, nullable=False)
+    name = db.Column(db.String(100), unique=True, nullable=False)  # 增加長度從30到100
     
     def __repr__(self):
         return f'<Tag {self.name}>'
