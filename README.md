@@ -16,6 +16,13 @@ A one-click deployable blog system built with Flask. Create your personal blog i
 - 📊 Google Analytics Integration
 - 📑 Custom Category Management
 - 🔍 SEO Optimization
+- 🎨 Customizable About Page
+  - Dynamic profile & background sections
+  - Customizable content sections
+  - Drag & drop section reordering
+  - Multiple layout options
+  - Markdown content support
+  - Social media integration
 
 ## Technology Stack
 
@@ -541,6 +548,59 @@ http://localhost:5000/categories
 # Filter posts by category
 http://localhost:5000/category/<category-name>
 ```
+
+## Customizing Your About Page
+
+The About page can be fully customized through the admin settings panel:
+
+1. Base Profile Settings:
+
+   - Profile image
+   - Name and title
+   - Short introduction
+   - Background text
+
+2. Content Sections:
+   - Research Projects
+   - Publications
+   - Professional Experience
+   - Technical Skills
+   - Current Projects
+
+### Replacing Default About Page
+
+1. Recommended approach:
+
+   ```bash
+   # Generate custom content using AI
+   # Use tools like Monica AI with your CV  and defalt about.html to generate professional content
+   https://monica.im/invitation-affiliate?ref=zgmwytv&ref_aff=zgmwytv
+   # Example prompt:
+   "Help me edit the About page HTML content based on my CV, following this structure:
+   - Profile section
+   - Background
+   - Professional Experience
+   - Skills & Technologies
+   - Projects & Publications"
+   ```
+
+2. Replace the content:
+
+   - Locate `blog/templates/about.html`
+   - Replace the template content while keeping the structure
+
+3. Best practices:
+   - Keep the responsive design elements
+   - Maintain heading hierarchy
+   - Use provided CSS classes for consistent styling
+   - Test mobile view
+
+### Coming Soon
+
+- Section template library
+- Visual section builder
+- CV import tool
+- More layout options
 
 ## Troubleshooting
 
