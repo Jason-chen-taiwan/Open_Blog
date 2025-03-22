@@ -78,6 +78,23 @@ def settings(type=None):
                         db.session.commit()
                         flash('Category deleted successfully')
                 return redirect(url_for('admin.settings'))
+                
+        elif setting_type == 'footer':
+            # 更新頁尾 About 文字
+            footer_about = request.form.get('footer_about', '').strip()
+            if footer_about:
+                Settings.set_setting('footer_about', footer_about)
+            
+            # 更新聯繫方式和社交媒體連結
+            email = request.form.get('email', '').strip()
+            Settings.set_setting('email', email)
+            
+            for platform in ['github', 'twitter', 'cake', 'instagram']:
+                url = request.form.get(f'{platform}_url', '').strip()
+                Settings.set_setting(f'{platform}_url', url)
+            
+            flash('Footer settings updated successfully')
+            return redirect(url_for('admin.settings'))
     
     # GET request handling
     blog_settings = Settings.get_blog_settings()
@@ -85,4 +102,10 @@ def settings(type=None):
                          blog_name=blog_settings['blog_name'],
                          logo_path=blog_settings['logo_path'],
                          ga_tracking_id=blog_settings['ga_tracking_id'],
+                         footer_about=blog_settings['footer_about'],
+                         github_url=blog_settings['github_url'],
+                         twitter_url=blog_settings['twitter_url'],
+                         cake_url=blog_settings['cake_url'],
+                         instagram_url=blog_settings['instagram_url'],
+                         email=blog_settings['email'],
                          categories=Category.query.order_by(Category.name).all())

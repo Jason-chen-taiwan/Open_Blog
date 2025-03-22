@@ -3,9 +3,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h5>About</h5>
-        <p>
-          Exploring the intersection of security, AI, and blockchain technology.
-        </p>
+        <p>{{ g.blog_settings.footer_about }}</p>
       </div>
 
       <div class="footer-section">
@@ -19,18 +17,27 @@
       <div class="footer-section">
         <h5>Connect</h5>
         <div class="social-links">
-          <a href="https://github.com/Jason-chen-taiwan" target="_blank">
+          {% if g.blog_settings.github_url %}
+          <a href="{{ g.blog_settings.github_url }}" target="_blank">
             <i class="fab fa-github"></i>
           </a>
-          <a href="https://x.com/zwasd5123jason" target="_blank">
+          {% endif %} {% if g.blog_settings.twitter_url %}
+          <a href="{{ g.blog_settings.twitter_url }}" target="_blank">
             <i class="fab fa-twitter"></i>
           </a>
-          <a href="https://www.cake.me/me/zwasd5123" target="_blank">
+          {% endif %} {% if g.blog_settings.cake_url %}
+          <a href="{{ g.blog_settings.cake_url }}" target="_blank">
             <i class="fas fa-birthday-cake"></i>
           </a>
-          <a href="https://www.instagram.com/zwasd5123/" target="_blank">
+          {% endif %} {% if g.blog_settings.instagram_url %}
+          <a href="{{ g.blog_settings.instagram_url }}" target="_blank">
             <i class="fab fa-instagram"></i>
           </a>
+          {% endif %} {% if g.blog_settings.email %}
+          <a href="mailto:{{ g.blog_settings.email }}">
+            <i class="fas fa-envelope"></i>
+          </a>
+          {% endif %}
         </div>
       </div>
     </div>

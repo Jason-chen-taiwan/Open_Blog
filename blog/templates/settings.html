@@ -77,6 +77,95 @@
     </div>
   </div>
 
+  <!-- Footer Settings -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Footer Settings</h5>
+      <form method="POST" action="{{ url_for('admin.settings') }}">
+        <input type="hidden" name="setting_type" value="footer" />
+        <div class="mb-3">
+          <label for="footer_about" class="form-label">About Text</label>
+          <textarea
+            class="form-control"
+            id="footer_about"
+            name="footer_about"
+            rows="3"
+          >
+              {{ footer_about }}</textarea
+          >
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Contact Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            value="{{ email }}"
+          />
+          <small class="form-text text-muted"
+            >Leave blank to hide email link</small
+          >
+        </div>
+        <div class="mb-3">
+          <label for="github_url" class="form-label">GitHub URL</label>
+          <input
+            type="url"
+            class="form-control"
+            id="github_url"
+            name="github_url"
+            value="{{ github_url }}"
+          />
+          <small class="form-text text-muted"
+            >Leave blank to hide GitHub icon</small
+          >
+        </div>
+        <div class="mb-3">
+          <label for="twitter_url" class="form-label">Twitter URL</label>
+          <input
+            type="url"
+            class="form-control"
+            id="twitter_url"
+            name="twitter_url"
+            value="{{ twitter_url }}"
+          />
+          <small class="form-text text-muted"
+            >Leave blank to hide Twitter icon</small
+          >
+        </div>
+        <div class="mb-3">
+          <label for="cake_url" class="form-label">Cake URL</label>
+          <input
+            type="url"
+            class="form-control"
+            id="cake_url"
+            name="cake_url"
+            value="{{ cake_url }}"
+          />
+          <small class="form-text text-muted"
+            >Leave blank to hide Cake icon</small
+          >
+        </div>
+        <div class="mb-3">
+          <label for="instagram_url" class="form-label">Instagram URL</label>
+          <input
+            type="url"
+            class="form-control"
+            id="instagram_url"
+            name="instagram_url"
+            value="{{ instagram_url }}"
+          />
+          <small class="form-text text-muted"
+            >Leave blank to hide Instagram icon</small
+          >
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Save Footer Settings
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Category Management -->
   <div class="card mb-4">
     <div class="card-body">

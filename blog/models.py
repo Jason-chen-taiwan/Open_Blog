@@ -130,5 +130,11 @@ class Settings(db.Model):
         return {
             'blog_name': cls.get_setting('blog_name', 'JasonCrypto\'s Blog'),
             'logo_path': cls.get_setting('logo_path', 'img/logo.png'),
-            'ga_tracking_id': cls.get_setting('ga_tracking_id', '')
+            'ga_tracking_id': cls.get_setting('ga_tracking_id', ''),
+            'footer_about': cls.get_setting('footer_about', 'Exploring the intersection of security, AI, and blockchain technology.'),
+            'github_url': cls.get_setting('github_url', ''),
+            'twitter_url': cls.get_setting('twitter_url', ''),
+            'cake_url': cls.get_setting('cake_url', ''),
+            'instagram_url': cls.get_setting('instagram_url', ''),
+            'email': cls.get_setting('email', '')
         }
