@@ -41,11 +41,11 @@ A one-click deployable blog system built with Flask. Create your personal blog i
 ```bash
 
 git clone https://github.com/your-username/open-blog.git
-cd open-blog
+cd blog
 
 # Copy environment template
 cp .env.example .env
-python setupp_credentials.py
+python setup_credentials.py
 ```
 
 setupp_credentials also can help you to reset config

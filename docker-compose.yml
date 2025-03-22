@@ -1,7 +1,11 @@
 services:
   mysql:
-    command: --default-authentication-plugin=mysql_native_password --init-file=/docker-entrypoint-initdb.d/init.sql
-      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    command: >
+      --default-authentication-plugin=caching_sha2_password
+      --init-file=/docker-entrypoint-initdb.d/init.sql
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --disable-host-cache
     container_name: blog-mysql
     deploy:
       resources:
@@ -12,41 +16,43 @@ services:
       MYSQL_PASSWORD: yourpassword
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: blog_user
+      MYSQL_HOST_CACHE_SIZE: "0"
+      TZ: UTC
     healthcheck:
       interval: 5s
       retries: 5
       test:
-      - CMD
-      - mysqladmin
-      - ping
-      - -h
-      - localhost
-      - -u$$MYSQL_USER
-      - -p$$MYSQL_PASSWORD
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -u$$MYSQL_USER
+        - -p$$MYSQL_PASSWORD
       timeout: 5s
     image: mysql:8.0
     ports:
-    - 3306:3306
+      - 3306:3306
     restart: unless-stopped
     volumes:
-    - mysql_data:/var/lib/mysql
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
   web:
     build: .
     command:
-    - gunicorn
-    - --bind
-    - 0.0.0.0:5000
-    - --workers
-    - '3'
-    - --access-logfile
-    - '-'
-    - --error-logfile
-    - '-'
-    - --capture-output
-    - --log-level
-    - info
-    - blog.app:app
+      - gunicorn
+      - --bind
+      - 0.0.0.0:5000
+      - --workers
+      - "3"
+      - --access-logfile
+      - "-"
+      - --error-logfile
+      - "-"
+      - --capture-output
+      - --log-level
+      - info
+      - blog.app:app
     container_name: blog-web
     depends_on:
       mysql:
@@ -56,41 +62,41 @@ services:
         limits:
           memory: 512M
     environment:
-    - MYSQL_HOST=mysql
-    - MYSQL_USER=blog_user
-    - MYSQL_DATABASE=blog_db
-    - FLASK_APP=blog.app
-    - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
-    - PYTHONUNBUFFERED=1
-    - PYTHON_UNBUFFERED="true"
-    - PYTHONIOENCODING=UTF-8
-    - FLASK_DEBUG=1
-    - MYSQL_PASSWORD=yourpassword
-    - ADMIN_EMAIL=admin@example.com
-    - SECRET_KEY=/+!+Oxu*_eIx6.{03f`!RF&E~^,c$:bcg3?<.C1ER0Mp,'N!wM
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=blog_user
+      - MYSQL_DATABASE=blog_db
+      - FLASK_APP=blog.app
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
+      - PYTHONUNBUFFERED=1
+      - PYTHON_UNBUFFERED="true"
+      - PYTHONIOENCODING=UTF-8
+      - FLASK_DEBUG=1
+      - MYSQL_PASSWORD=yourpassword
+      - ADMIN_EMAIL=admin@example.com
+      - SECRET_KEY=/+!+Oxu*_eIx6.{03f`!RF&E~^,c$:bcg3?<.C1ER0Mp,'N!wM
     healthcheck:
       interval: 30s
       retries: 3
       start_period: 40s
       test:
-      - CMD
-      - curl
-      - -f
-      - http://localhost:5000/ || exit 1
+        - CMD
+        - curl
+        - -f
+        - http://localhost:5000/ || exit 1
       timeout: 10s
     logging:
       driver: json-file
       options:
-        max-file: '3'
+        max-file: "3"
         max-size: 10m
     ports:
-    - 5000:5000
+      - 5000:5000
     restart: on-failure:3
     stdin_open: true
     tty: true
     volumes:
-    - .:/app
-    - ./blog/static/uploads:/app/blog/static/uploads
-    - ./blog/static/img:/app/blog/static/img
+      - .:/app
+      - ./blog/static/uploads:/app/blog/static/uploads
+      - ./blog/static/img:/app/blog/static/img
 volumes:
   mysql_data: null
