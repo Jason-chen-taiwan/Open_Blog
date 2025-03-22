@@ -54,28 +54,28 @@ setupp_credentials also can help you to reset config
 python setupp_credentials.py --reset
 ```
 
-## Customizing Your About Page
+2. Customizing Your About Page
 
-The About page can be fully customized through the admin settings panel:
+   The About page can be fully customized through the admin settings panel:
 
-1. Base Profile Settings:
+   1. Base Profile Settings:
 
-   - Profile image
-   - Name and title
-   - Short introduction
-   - Background text
+      - Profile image
+      - Name and title
+      - Short introduction
+      - Background text
 
-2. Content Sections:
+   2. Content Sections:
 
-   - Research Projects
-   - Publications
-   - Professional Experience
-   - Technical Skills
-   - Current Projects
+      - Research Projects
+      - Publications
+      - Professional Experience
+      - Technical Skills
+      - Current Projects
 
-3. Replacing Default About Page
+   3. Replacing Default About Page
 
-Recommended approach:
+   Recommended approach:
 
 ```bash
 # Generate custom content using AI
