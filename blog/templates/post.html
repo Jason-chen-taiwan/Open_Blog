@@ -74,4 +74,13 @@
     <button type="submit">Submit</button>
   </form>
 </section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    // 初始化所有代碼塊的語法高亮
+    document.querySelectorAll("pre.ql-syntax").forEach((block) => {
+      hljs.highlightElement(block);
+    });
+  });
+</script>
 {% endblock %}

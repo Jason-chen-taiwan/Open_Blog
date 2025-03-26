@@ -1,5 +1,11 @@
 {% extends "base.html" %} {% block content %}
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai-sublime.min.css"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
 <div class="container">
   <h1>Create New Post</h1>
   <form
@@ -74,38 +80,74 @@
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script>
+  // Configure Highlight.js
+  hljs.configure({
+    languages: [
+      "javascript",
+      "ruby",
+      "python",
+      "rust",
+      "java",
+      "cpp",
+      "html",
+      "css",
+    ],
+  });
+
   var quill = new Quill("#editor", {
     theme: "snow",
     modules: {
+      syntax: true, // 啟用語法高亮
       toolbar: {
         container: [
-          ["bold", "italic", "underline", "strike"], // 文字樣式
-          ["blockquote", "code-block"], // 引用和代碼區塊
-          [{ header: [1, 2, 3, 4, 5, 6, false] }], // 標題等級
-          [{ list: "ordered" }, { list: "bullet" }], // 有序和無序列表
-          [{ script: "sub" }, { script: "super" }], // 上標/下標
-          [{ indent: "-1" }, { indent: "+1" }], // 縮排控制
-          [{ direction: "rtl" }], // 文字方向
-          [{ size: ["small", false, "large", "huge"] }], // 文字大小
-          [{ color: [] }, { background: [] }], // 字色和背景色
-          [{ font: [] }], // 字體
-          [{ align: [] }], // 對齊
-          ["link", "image", "video"], // 連結、圖片和影片
-          ["clean"], // 清除格式
+          ["bold", "italic", "underline", "strike"],
+          ["blockquote", "code-block"],
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ script: "sub" }, { script: "super" }],
+          [{ indent: "-1" }, { indent: "+1" }],
+          [{ direction: "rtl" }],
+          [{ size: ["small", false, "large", "huge"] }],
+          [{ color: [] }, { background: [] }],
+          [{ font: [] }],
+          [{ align: [] }],
+          ["link", "image", "video"],
+          ["clean"],
         ],
         handlers: {
           image: imageHandler,
           video: videoHandler,
+          "code-block": function () {
+            // 獲取當前選擇的文字
+            let range = this.quill.getSelection();
+            if (range) {
+              // 檢查是否已經是程式碼區塊
+              let [block] = this.quill.getLine(range.index);
+              let isCodeBlock = block.domNode.tagName === "PRE";
+
+              // 切換程式碼區塊格式
+              this.quill.format("code-block", !isCodeBlock);
+
+              // 如果新建了程式碼區塊，應用語法高亮
+              if (!isCodeBlock) {
+                setTimeout(() => {
+                  let blocks = document.querySelectorAll("pre.ql-syntax");
+                  blocks.forEach((block) => {
+                    hljs.highlightElement(block);
+                  });
+                }, 100);
+              }
+            }
+          },
         },
       },
       clipboard: {
-        matchVisual: false, // 避免複製時出現多餘格式
+        matchVisual: false,
       },
     },
     placeholder: "Write your content here...",
   });
 
-  // 自訂圖片上傳處理函式
   function imageHandler() {
     var range = quill.getSelection();
     var input = document.createElement("input");
@@ -135,12 +177,10 @@
     };
   }
 
-  // 新增影片處理函數
   function videoHandler() {
     const range = quill.getSelection();
     const value = prompt("Please enter the video URL:");
     if (value) {
-      // 支援 YouTube 和 Vimeo
       if (value.includes("youtube.com") || value.includes("vimeo.com")) {
         quill.insertEmbed(range.index, "video", value, "user");
       } else {
@@ -149,7 +189,6 @@
     }
   }
 
-  // 表單送出前，將編輯器內容存入隱藏欄位
   document.getElementById("postForm").onsubmit = function () {
     document.getElementById("content").value = quill.root.innerHTML;
   };

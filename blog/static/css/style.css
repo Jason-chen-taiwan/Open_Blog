@@ -616,3 +616,62 @@ footer {
 [data-bs-theme="dark"] .auth-form a:hover {
   color: var(--secondary-color);
 }
+
+/* Code Block Styles */
+pre,
+.ql-syntax {
+  background-color: #282c34 !important;
+  color: #abb2bf !important;
+  padding: 1em !important;
+  border-radius: 4px !important;
+  font-family: "Consolas", "Monaco", "Courier New", monospace !important;
+  margin: 1em 0 !important;
+  overflow-x: auto !important;
+  font-size: 0.9em !important;
+  line-height: 1.5 !important;
+  border: 1px solid #3e4451 !important;
+}
+
+.ql-editor pre.ql-syntax {
+  background-color: #23241f !important;
+  color: #f8f8f2 !important;
+  overflow: visible !important;
+  padding: 1em !important;
+  border-radius: 4px !important;
+  white-space: pre !important;
+  margin: 1em 0 !important;
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "source-code-pro",
+    monospace !important;
+}
+
+/* Dark mode adjustments for code blocks */
+[data-bs-theme="dark"] .ql-editor pre.ql-syntax {
+  background-color: #1a1a1a !important;
+  border: 1px solid #2c2c2c !important;
+}
+
+/* Syntax highlighting colors */
+.hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 1em;
+  background: #23241f;
+  color: #f8f8f2;
+  -webkit-text-size-adjust: none;
+}
+
+/* Inline Code Styles */
+:not(pre) > code {
+  background-color: rgba(40, 44, 52, 0.05) !important;
+  padding: 0.2em 0.4em !important;
+  border-radius: 3px !important;
+  font-family: "Consolas", "Monaco", "Courier New", monospace !important;
+  color: #e06c75 !important;
+}
+
+/* Dark mode adjustments */
+[data-bs-theme="dark"] pre,
+[data-bs-theme="dark"] .ql-syntax {
+  background-color: #1a1a1a !important;
+  border-color: #2c2c2c !important;
+}
